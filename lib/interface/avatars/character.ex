@@ -2,12 +2,13 @@ defmodule Interface.Avatars.Character do
   use Ecto.Schema
   import Ecto.Changeset
   alias Interface.Avatars.Character
+  alias Interface.Accounts.User
 
 
   schema "characters" do
     field :bio, :string
     field :name, :string
-    field :user_id, :id
+    belongs_to :user, User
 
     timestamps()
   end

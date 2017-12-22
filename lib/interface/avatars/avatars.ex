@@ -22,6 +22,21 @@ defmodule Interface.Avatars do
   end
 
   @doc """
+  Returns the users list of characters.
+
+  ## Examples
+
+      iex> list_characters()
+      [%Character{}, ...]
+
+  """
+  def my_characters!(id) do
+    Character
+    |> where([c], c.user_id == ^id)
+    |> Repo.all()
+  end
+
+  @doc """
   Gets a single character.
 
   Raises `Ecto.NoResultsError` if the Character does not exist.
