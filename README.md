@@ -6,9 +6,10 @@ To start your Phoenix server:
   * Create and migrate your database with `mix ecto.create && mix ecto.migrate`
   * Start Phoenix endpoint with `mix phx.server`
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+Now you can visit [`localhost:4000`](http://localhost:4000/graphiql) from your browser.
 
-Ready to run in production? Please [check our deployment guides](http://www.phoenixframework.org/docs/deployment).
+** Example to get user one and their characters **
+`curl -X POST -H "Content-Type: application/json" --data '{ "query": "{ user(id: 1) { name, characters { name } } }" }' http://localhost:4000/graphiql`
 
 ## Learn more
 
