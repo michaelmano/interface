@@ -17,7 +17,9 @@ defmodule Interface.Avatars do
       [%Character{}, ...]
 
   """
-  def list_characters, do: Repo.preload(Repo.all(Character), :user)
+  def list_characters do
+    Repo.all(Character)
+  end
 
   @doc """
   Gets a single character.
@@ -33,8 +35,9 @@ defmodule Interface.Avatars do
       ** (Ecto.NoResultsError)
 
   """
-  def get_character!(id), do: Repo.preload(Repo.get!(Character, id), :user)
-
+  def get_character!(id) do
+    Repo.get!(Character, id)
+  end
   @doc """
   Creates a character.
 

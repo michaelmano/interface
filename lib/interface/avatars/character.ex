@@ -16,7 +16,7 @@ defmodule Interface.Avatars.Character do
   @doc false
   def changeset(%Character{} = character, attrs) do
     character
-    |> cast(attrs, [:name, :bio, :user])
-    |> validate_required([:name, :bio, :user])
+    |> cast(attrs, [:name, :bio])
+    |> validate_required([:name, :bio])
   end
 end
