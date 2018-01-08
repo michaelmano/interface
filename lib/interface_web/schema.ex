@@ -41,7 +41,7 @@ defmodule InterfaceWeb.Schema do
             resolve &AvatarsResolver.all_classes/3
         end
 
-        field :user, :user do
+        field :get_user, :user do
             arg :id, non_null(:integer)
             resolve &AccountsResolver.get_user/3
         end
