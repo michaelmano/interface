@@ -13,11 +13,19 @@ defmodule InterfaceWeb.Schema do
         field :characters, list_of(:character), resolve: assoc(:characters)
     end
   
+    object :class do
+        field :id, non_null(:id)
+        field :name, non_null(:string)
+        field :description, non_null(:string)
+        field :excerpt, non_null(:string)
+    end
+
     object :character do
       field :id, non_null(:id)
       field :name, non_null(:string)
       field :bio, non_null(:string)
       belongs_to :user, User
+      field :class, non_null(:class), resolve: assoc(:class)
     end
   
     query do
@@ -27,6 +35,10 @@ defmodule InterfaceWeb.Schema do
 
         field :all_characters, list_of(:character) do
             resolve &AvatarsResolver.all_characters/3
+        end
+
+        field :all_classes, list_of(:class) do
+            resolve &AvatarsResolver.all_classes/3
         end
 
         field :user, :user do
