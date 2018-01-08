@@ -17,24 +17,7 @@ defmodule Interface.Avatars do
       [%Character{}, ...]
 
   """
-  def list_characters do
-    Repo.all(Character)
-  end
-
-  @doc """
-  Returns the users list of characters.
-
-  ## Examples
-
-      iex> list_characters()
-      [%Character{}, ...]
-
-  """
-  def my_characters!(id) do
-    Character
-    |> where([c], c.user_id == ^id)
-    |> Repo.all()
-  end
+  def list_characters, do: Repo.preload(Repo.all(Character), :user)
 
   @doc """
   Gets a single character.
@@ -50,7 +33,7 @@ defmodule Interface.Avatars do
       ** (Ecto.NoResultsError)
 
   """
-  def get_character!(id), do: Repo.get!(Character, id)
+  def get_character!(id), do: Repo.preload(Repo.get!(Character, id), :user)
 
   @doc """
   Creates a character.

@@ -13,23 +13,24 @@ defmodule InterfaceWeb.Schema do
   
     object :character do
       field :id, non_null(:id)
+      field :user, non_null(:user)
       field :name, non_null(:string)
       field :bio, non_null(:string)
     end
   
     query do
-        field :all_users, non_null(list_of(non_null(:user))) do
+        field :all_users, :user do
             resolve &AccountsResolver.all_users/3
         end
 
-        field :all_characters, non_null(list_of(non_null(:character))) do
+        field :all_characters, :character do
             resolve &AvatarsResolver.all_characters/3
         end
 
-        field :user, non_null(:user) do
+        field :user, :user do
             arg :id, non_null(:integer)
             resolve &AccountsResolver.get_user/3
         end
-      end
+    end
 end
   

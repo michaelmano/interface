@@ -6,8 +6,4 @@ defmodule InterfaceWeb.AvatarsResolver do
     {:ok, characters}
   end
 
-  def my_characters(_root, args, _info) do
-    characters = Avatars.my_characters!(args[:user_id])
-    {:ok, characters}
-  end
 end
