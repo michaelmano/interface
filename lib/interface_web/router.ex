@@ -8,7 +8,7 @@ defmodule InterfaceWeb.Router do
   scope "/" do
     pipe_through :api
 
-    forward "/graphiql", Absinthe.Plug.GraphiQL,
+    forward "/api", Absinthe.Plug.GraphiQL,
       schema: InterfaceWeb.Schema,
       interface: :simple,
       context: %{pubsub: InterfaceWeb.Endpoint}
