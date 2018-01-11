@@ -8,6 +8,7 @@ defmodule InterfaceWeb.Schema do
 
     object :user do
         field :id, non_null(:id)
+        field :slug, non_null(:string)
         field :name, non_null(:string)
         field :email, non_null(:string)
         field :characters, list_of(:character), resolve: assoc(:characters)
@@ -29,20 +30,21 @@ defmodule InterfaceWeb.Schema do
     end
   
     query do
-        field :all_users, list_of(:user) do
+        field :users, list_of(:user) do
             resolve &AccountsResolver.all_users/3
         end
 
-        field :all_characters, list_of(:character) do
+        field :characters, list_of(:character) do
             resolve &AvatarsResolver.all_characters/3
         end
 
-        field :all_classes, list_of(:class) do
+        field :classes, list_of(:class) do
             resolve &AvatarsResolver.all_classes/3
         end
 
-        field :get_user, :user do
-            arg :id, non_null(:integer)
+        field :user, :user do
+            arg :id, :integer
+            arg :slug, :string
             resolve &AccountsResolver.get_user/3
         end
 

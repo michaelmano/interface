@@ -35,15 +35,14 @@ defmodule Interface.Accounts do
       ** (Ecto.NoResultsError)
 
   """
-  def get_user!(param) do
+  def get_user!(args) do
     User
-    |> where([u], u.slug == ^param)
+    |> determine_user_lookup_method(args)
     |> Repo.one
-    |> case do
-      nil  -> {:error, :not_found}
-      user -> {:ok, user}
-    end
   end
+
+  defp determine_user_lookup_method(user, %{id: id}), do: user |> where([u], u.id == ^id)
+  defp determine_user_lookup_method(user, %{slug: slug}), do: user |> where([u], u.slug == ^slug)
 
   @doc """
   Creates a user.

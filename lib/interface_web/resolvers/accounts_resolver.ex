@@ -7,7 +7,7 @@ defmodule InterfaceWeb.AccountsResolver do
     end
 
     def get_user(_root, args, _info) do
-      user = Accounts.get_user!(args[:id])
+      user = Accounts.get_user!(args)
       {:ok, user}
     end
 
