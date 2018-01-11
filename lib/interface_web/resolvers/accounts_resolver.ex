@@ -10,4 +10,6 @@ defmodule InterfaceWeb.AccountsResolver do
       user = Accounts.get_user!(args[:id])
       {:ok, user}
     end
+
+    def create_user(_root, args, _info), do: Accounts.create_user(args)
 end

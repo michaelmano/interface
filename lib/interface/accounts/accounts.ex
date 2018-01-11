@@ -35,7 +35,15 @@ defmodule Interface.Accounts do
       ** (Ecto.NoResultsError)
 
   """
-  def get_user!(id), do: Repo.get!(User, id)
+  def get_user!(param) do
+    User
+    |> where([u], u.slug == ^param)
+    |> Repo.one
+    |> case do
+      nil  -> {:error, :not_found}
+      user -> {:ok, user}
+    end
+  end
 
   @doc """
   Creates a user.
@@ -51,7 +59,7 @@ defmodule Interface.Accounts do
   """
   def create_user(attrs \\ %{}) do
     %User{}
-    |> User.changeset(attrs)
+    |> User.create_changeset(insert_slug(attrs))
     |> Repo.insert()
   end
 
@@ -69,7 +77,7 @@ defmodule Interface.Accounts do
   """
   def update_user(%User{} = user, attrs) do
     user
-    |> User.changeset(attrs)
+    |> User.update_changeset(attrs)
     |> Repo.update()
   end
 
@@ -89,16 +97,39 @@ defmodule Interface.Accounts do
     Repo.delete(user)
   end
 
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking user changes.
+  # @doc """
+  # Returns an `%Ecto.Changeset{}` for tracking user changes.
 
-  ## Examples
+  # ## Examples
 
-      iex> change_user(user)
-      %Ecto.Changeset{source: %User{}}
+  #     iex> change_user(user)
+  #     %Ecto.Changeset{source: %User{}}
 
-  """
-  def change_user(%User{} = user) do
-    User.changeset(user, %{})
+  # """
+  # def change_user(%User{} = user) do
+  #   User.changeset(user, %{})
+  # end
+
+  defp insert_slug(attrs) do
+    Map.put(attrs, :slug, Map.get(attrs, :name))
+  end
+
+  def create_changeset do
+    User.create_changeset(%User{}, %{})
+  end
+
+  def update_changeset(user) do
+    User.update_changeset(user, %{})
+  end
+
+  def authenticate(email, password) do
+    User
+    |> Repo.get_by(email: email)
+    |> validate_and_return_user(password)
+  end
+
+  defp validate_and_return_user(nil, _), do: {:invalid, nil}
+  defp validate_and_return_user(user, password) do
+    User.check_password(user, password)
   end
 end

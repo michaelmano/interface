@@ -45,6 +45,14 @@ defmodule InterfaceWeb.Schema do
             arg :id, non_null(:integer)
             resolve &AccountsResolver.get_user/3
         end
+
+        field :create_user, :user do
+            arg :name, non_null(:string)
+            arg :email, non_null(:string)
+            arg :password, non_null(:string)
+            arg :password_confirmation, non_null(:string)
+            resolve &AccountsResolver.create_user/3
+        end
     end
 end
   

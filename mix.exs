@@ -36,13 +36,15 @@ defmodule Interface.Mixfile do
       {:phoenix, "~> 1.3.0"},
       {:phoenix_pubsub, "~> 1.0"},
       {:phoenix_ecto, "~> 3.2"},
+      {:bcrypt_elixir, "~> 1.0"},
       {:mariaex, ">= 0.0.0"},
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
       {:absinthe_ecto, "~> 0.1.3"},
       {:absinthe_plug, "~> 1.4.2"},
       {:comeonin, "~> 4.0"},
-      {:guardian, "~> 1.0.0"}
+      {:guardian, "~> 1.0.0"},
+      {:slugger, "~> 0.2"},
     ]
   end
 
