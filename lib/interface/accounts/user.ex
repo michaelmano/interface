@@ -67,11 +67,11 @@ defmodule Interface.Accounts.User do
 
   defp validate_fields(changeset) do
     changeset
-    # |> validate_format(:email, ~r/@bcm\.com\.au/)
     |> validate_length(:name, min: 2)
     |> validate_length(:slug, min: 2)
     |> validate_length(:password, min: 8)
     |> validate_password_confirmation()
+    |> format_email_address()
     |> unique_constraint(:email)
     |> unique_constraint(:slug)
     |> create_password_hash()
@@ -90,6 +90,10 @@ defmodule Interface.Accounts.User do
     end
   end
 
+  defp format_email_address(%{changes: %{email: email}} = changeset) do
+    change(changeset, email: String.downcase(email))
+  end
+  
   defp confirm_passwords_match(%{changes: %{
     password: password,
     password_confirmation: password_confirmation
