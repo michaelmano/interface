@@ -114,7 +114,7 @@ defmodule Interface.Avatars do
       [%Class{}, ...]
 
   """
-  def list_classes do
+  def list_classes() do
     Repo.all(Class)
   end
 

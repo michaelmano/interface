@@ -9,7 +9,7 @@ To start your Phoenix server:
 Now you can visit [`localhost:4000`](http://localhost:4000/graphiql) from your browser.
 
 ** Example to get user one and their characters **
-`curl -X POST -H "Content-Type: application/json" --data '{ "query": "{ getUser(name: 2) { name } }" }' http://localhost:4000/api`
+`curl -X POST -H "Content-Type: application/json" --data '{ "query": "{ users { name } }" }' http://localhost:4000/api`
 
 ## Learn more
 

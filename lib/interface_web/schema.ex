@@ -6,19 +6,11 @@ defmodule InterfaceWeb.Schema do
     alias InterfaceWeb.AccountsResolver
     alias Interface.Accounts.User
 
-    input_object :update_user_params do
+    input_object :user_params do
         field :name, :string
         field :email, :string
         field :password, :string
         field :password_confirmation, :string
-    end
-
-    mutation do
-        field :update_user, type: :user do
-            arg :id, non_null(:integer)
-            arg :user, :update_user_params
-            resolve &AccountsResolver.update/3
-        end
     end
 
     object :user do
@@ -26,7 +18,6 @@ defmodule InterfaceWeb.Schema do
         field :slug, non_null(:string)
         field :name, non_null(:string)
         field :email, non_null(:string)
-        field :characters, list_of(:character), resolve: assoc(:characters)
     end
   
     object :class do
@@ -36,21 +27,22 @@ defmodule InterfaceWeb.Schema do
         field :excerpt, non_null(:string)
     end
 
-    object :character do
-      field :id, non_null(:id)
-      field :name, non_null(:string)
-      field :bio, non_null(:string)
-      belongs_to :user, User
-      field :class, non_null(:class), resolve: assoc(:class)
+    mutation do
+        field :create_user, :user do
+            arg :user, :user_params
+            resolve &AccountsResolver.create_user/3
+        end
+        
+        field :update_user, type: :user do
+            arg :id, non_null(:integer)
+            arg :user, :user_params
+            resolve &AccountsResolver.update/3
+        end
     end
-  
+
     query do
         field :users, list_of(:user) do
             resolve &AccountsResolver.all_users/3
-        end
-
-        field :characters, list_of(:character) do
-            resolve &AvatarsResolver.all_characters/3
         end
 
         field :classes, list_of(:class) do
@@ -61,14 +53,6 @@ defmodule InterfaceWeb.Schema do
             arg :id, :integer
             arg :slug, :string
             resolve &AccountsResolver.get_user/3
-        end
-
-        field :create_user, :user do
-            arg :name, non_null(:string)
-            arg :email, non_null(:string)
-            arg :password, non_null(:string)
-            arg :password_confirmation, non_null(:string)
-            resolve &AccountsResolver.create_user/3
         end
     end
 end
