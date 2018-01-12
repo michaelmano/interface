@@ -12,4 +12,6 @@ defmodule InterfaceWeb.AccountsResolver do
     end
 
     def create_user(_root, args, _info), do: Accounts.create_user(args)
+
+    def update(_root, args, _info), do: Accounts.update_user(args)
 end

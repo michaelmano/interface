@@ -44,3 +44,18 @@ config :interface, Interface.Repo,
   database: "interface_dev",
   hostname: "localhost",
   pool_size: 10
+
+# Configures Elixir's Logger
+config :logger, :console,
+format: "$time $metadata[$level] $message\n",
+metadata: [:request_id]
+
+# Configures Guardian
+config :guardian, Guardian,
+allowed_algos: ["HS512"], # optional
+verify_module: Guardian.JWT,  # optional
+issuer: "Interface",
+ttl: { 30, :days },
+verify_issuer: true, # optional
+secret_key: "this-is-for-development-only",
+serializer: Interface.GuardianSerializer

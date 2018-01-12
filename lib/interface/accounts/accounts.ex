@@ -74,10 +74,11 @@ defmodule Interface.Accounts do
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_user(%User{} = user, attrs) do
-    user
-    |> User.update_changeset(attrs)
-    |> Repo.update()
+  def update_user(%{id: id, user: attrs}) do
+    Repo.get!(User, id)
+    |> User.update_changeset(insert_slug(attrs))
+    |> Repo.update
+    |> IO.inspect
   end
 
   @doc """
