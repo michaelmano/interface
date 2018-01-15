@@ -11,8 +11,8 @@ defmodule InterfaceWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/api", do: pipe_through :graphql
-  scope "/graphiql", do: pipe_through :api
+  scope "/api", do: pipe_through :api
+  scope "/graphiql", do: pipe_through :graphql
 
   forward "/api",
     Absinthe.Plug,
@@ -25,5 +25,4 @@ defmodule InterfaceWeb.Router do
     schema: InterfaceWeb.Schema,
     interface: :simple,
     context: %{pubsub: InterfaceWeb.Endpoint}
-
 end
