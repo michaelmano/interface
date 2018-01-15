@@ -18,3 +18,6 @@ Now you can visit [`localhost:4000`](http://localhost:4000/graphiql) from your b
   * Docs: https://hexdocs.pm/phoenix
   * Mailing list: http://groups.google.com/group/phoenix-talk
   * Source: https://github.com/phoenixframework/phoenix
+
+
+https://github.com/ueberauth/guardian/blob/b6ccd5d7d136bbafdf6166de7b45a2b8e0192500/lib/guardian/plug/pipeline.ex
