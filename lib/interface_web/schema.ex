@@ -4,9 +4,7 @@ defmodule InterfaceWeb.Schema do
   
     alias InterfaceWeb.AvatarsResolver
     alias InterfaceWeb.AccountsResolver
-    alias Interface.Accounts.User
 
-    
     input_object :user_params do
         field :name, :string
         field :email, :string
@@ -36,7 +34,7 @@ defmodule InterfaceWeb.Schema do
         field :login, type: :session do
             arg :email, non_null(:string)
             arg :password, non_null(:string)
-            resolve &MyApp.UserResolver.login/2
+            resolve &AccountsResolver.login/3
         end
 
         field :create_user, :user do

@@ -48,8 +48,8 @@ defmodule Interface.Accounts.User do
 
   def check_password(user, password) do
     case Bcrypt.checkpw(password, user.hashed_password) do
-      true  -> {:valid, Map.take(user, @public_user_details)}
-      false -> {:invalid, nil}
+      true  -> {:ok, Map.take(user, @public_user_details)}
+      false -> {:error, nil}
     end
   end
 

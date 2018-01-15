@@ -14,4 +14,11 @@ defmodule InterfaceWeb.AccountsResolver do
     def create_user(_root, args, _info), do: Accounts.create_user(args)
 
     def update(_root, args, _info), do: Accounts.update_user(args)
+
+    def login(_root, args, _info) do
+      with {:ok, user} <- Accounts.authenticate(args),
+        {:ok, token, _ } <- Guardian.encode_and_sign(user, :access) do
+          {:ok, %{token: token}}
+      end
+    end
 end
