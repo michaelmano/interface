@@ -16,10 +16,9 @@ defmodule InterfaceWeb.AccountsResolver do
     def update(_root, args, _info), do: Accounts.update_user(args)
 
     def login(_root, args, _info) do
-      with {:ok, user} <- Accounts.authenticate(args) do
-        with {:ok, token, _} = Interface.Guardian.encode_and_sign(user, token_type: "access") do
+      with {:ok, user} <- Accounts.authenticate(args),
+        {:ok, token, _} <- Interface.Guardian.encode_and_sign(user, token_type: "access") do
           {:ok, %{token: token}}
-        end
       end
     end
 end
