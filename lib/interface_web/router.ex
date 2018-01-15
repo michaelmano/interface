@@ -1,28 +1,34 @@
 defmodule InterfaceWeb.Router do
   use InterfaceWeb, :router
-
-  pipeline :api do
+ 
+  pipeline :browser do
+    plug :accepts, ["html"]
+    plug :fetch_session
+    plug :fetch_flash
+    plug :protect_from_forgery
+    plug :put_secure_browser_headers
+  end
+ 
+  pipeline :graphql do
     plug Guardian.Plug.VerifyHeader, realm: "Bearer"
     plug Guardian.Plug.LoadResource
-    plug Interface.InterfaceWeb.Plug.Context
+    plug Interface.InterfaceWeb.Plugs.Context
   end
-
-  pipeline :graphql do
-    plug :accepts, ["json"]
+ 
+  scope "/", Interface do
+    pipe_through :browser # Use the default browser stack
+ 
+    get "/", PageController, :index
   end
-
-  scope "/api", do: pipe_through :api
-  scope "/graphiql", do: pipe_through :graphql
-
-  forward "/api",
-    Absinthe.Plug,
-    schema: InterfaceWeb.Schema,
-    interface: :simple,
-    context: %{pubsub: InterfaceWeb.Endpoint}
-
-  forward "/graphiql",
-    Absinthe.Plug.GraphiQL,
-    schema: InterfaceWeb.Schema,
-    interface: :simple,
-    context: %{pubsub: InterfaceWeb.Endpoint}
+ 
+  scope "/api" do
+    pipe_through :graphql
+ 
+    forward "/", Absinthe.Plug,
+      schema: Interface.Schema
+  end
+ 
+  forward "/graphiql", Absinthe.Plug.GraphiQL,
+    schema: Interface.Schema
+    
 end

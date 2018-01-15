@@ -1,7 +1,11 @@
-defmodule Interface.InterfaceWeb.Plug.Context do
+defmodule Interface.InterfaceWeb.Plugs.Context do
     @behaviour Plug
     import Plug.Conn
-    def init(opts), do: opts
+    def init(opts) do
+        IO.puts("TRYING TO FIGUIRE THIS SHT OUT")
+        opts
+    end
+
     def call(conn, _) do
         case Guardian.Plug.current_resource(conn) do
             nil -> conn

@@ -1,8 +1,7 @@
-defmodule InterfaceWeb.Schema do
+defmodule Interface.Schema do
     use Absinthe.Schema
     use Absinthe.Ecto, repo: Interface.Repo
   
-    alias InterfaceWeb.AvatarsResolver
     alias InterfaceWeb.AccountsResolver
 
     input_object :user_params do
@@ -23,11 +22,8 @@ defmodule InterfaceWeb.Schema do
         field :email, non_null(:string)
     end
   
-    object :class do
-        field :id, non_null(:id)
+    object :test do
         field :name, non_null(:string)
-        field :description, non_null(:string)
-        field :excerpt, non_null(:string)
     end
 
     mutation do
@@ -53,12 +49,13 @@ defmodule InterfaceWeb.Schema do
     end
 
     query do
-        field :users, list_of(:user) do
-            resolve &AccountsResolver.all_users/3
+
+        field :test, :test do
+            resolve &AccountsResolver.test/3
         end
 
-        field :classes, list_of(:class) do
-            resolve &AvatarsResolver.all_classes/3
+        field :users, list_of(:user) do
+            resolve &AccountsResolver.all_users/3
         end
 
         field :user, :user do

@@ -21,4 +21,11 @@ defmodule InterfaceWeb.AccountsResolver do
           {:ok, %{token: token}}
       end
     end
+
+    def test(_root, args, _info) do
+      {:ok, %{name: "the current users name is "}}
+    #   with {:ok, claims} <- Interface.Guardian.decode_and_verify(token, %{"typ" => "access"}) do
+      
+    #   end
+    end
 end

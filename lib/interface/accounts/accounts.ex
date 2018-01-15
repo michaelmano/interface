@@ -132,4 +132,8 @@ defmodule Interface.Accounts do
   defp validate_and_return_user(user, password) do
     User.check_password(user, password)
   end
+
+  def test(args) do
+    {:ok, %{name: "the current users name is"}}
+  end
 end
