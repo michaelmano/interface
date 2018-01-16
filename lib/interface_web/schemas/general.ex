@@ -1,4 +1,4 @@
-defmodule Interface.Schema do
+defmodule InterfaceWeb.Schemas.General do
     use Absinthe.Schema
     use Absinthe.Ecto, repo: Interface.Repo
   
@@ -22,10 +22,6 @@ defmodule Interface.Schema do
         field :email, non_null(:string)
     end
   
-    object :test do
-        field :name, non_null(:string)
-    end
-
     mutation do
         field :login, type: :session do
             arg :email, non_null(:string)
@@ -49,11 +45,6 @@ defmodule Interface.Schema do
     end
 
     query do
-
-        field :test, :test do
-            resolve &AccountsResolver.test/3
-        end
-
         field :users, list_of(:user) do
             resolve &AccountsResolver.all_users/3
         end

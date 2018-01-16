@@ -8,8 +8,26 @@ To start your Phoenix server:
 
 Now you can visit [`localhost:4000`](http://localhost:4000/graphiql) from your browser.
 
-** Example to get user one and their characters **
-`curl -X POST -H "Content-Type: application/json" --data '{ "query": "{ users { name } }" }' http://localhost:4000/api`
+** Example to request all users **
+```
+curl -X POST \
+  -H 'Authorization: Bearer <TOKEN>' \
+  -H 'Content-Type: application/json' \
+  -d '{ "query": "{ my { name } }" }' \
+    http://localhost:4000/api
+```
+```
+curl -X POST \
+  -H "Content-Type:application/json" \
+  -d '{ "query": "mutation { login(email:\"email@address.com\",password:\"password\") { token } }" }' \
+  'http://localhost:4000/api'
+
+```
+```
+http://localhost:4000/api?query={users{name}}
+```
+
+
 
 ## Learn more
 
@@ -18,6 +36,3 @@ Now you can visit [`localhost:4000`](http://localhost:4000/graphiql) from your b
   * Docs: https://hexdocs.pm/phoenix
   * Mailing list: http://groups.google.com/group/phoenix-talk
   * Source: https://github.com/phoenixframework/phoenix
-
-
-https://github.com/ueberauth/guardian/blob/b6ccd5d7d136bbafdf6166de7b45a2b8e0192500/lib/guardian/plug/pipeline.ex
