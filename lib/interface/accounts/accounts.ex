@@ -78,7 +78,6 @@ defmodule Interface.Accounts do
     Repo.get!(User, id)
     |> User.update_changeset(insert_slug(attrs))
     |> Repo.update
-    |> IO.inspect
   end
 
   @doc """

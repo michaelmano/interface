@@ -3,11 +3,13 @@ defmodule InterfaceWeb.Router do
   alias InterfaceWeb.{Auth,Schemas}
 
   pipeline :session do
+    plug :fetch_session
+    plug :fetch_flash
     plug Guardian.Plug.Pipeline, module: Interface.Guardian,
       error_handler: Auth.ErrorHandler
     plug Guardian.Plug.VerifyHeader, realm: "Bearer"
-    # plug Guardian.Plug.LoadResource (This has been removed as it will only allow users past.)
-    plug Auth.CurrentUser
+    plug Guardian.Plug.LoadResource, allow_blank: true
+    plug InterfaceWeb.Context
   end
 
   pipeline :api do

@@ -29,6 +29,11 @@ defmodule InterfaceWeb.Schemas.General do
             resolve &AccountsResolver.login/3
         end
 
+        field :logout, type: :user do
+            middleware InterfaceWeb.Middleware.Auth.Logout
+            resolve &AccountsResolver.logout/2
+          end
+
         field :create_user, :user do
             arg :name, :string
             arg :email, :string
@@ -45,6 +50,10 @@ defmodule InterfaceWeb.Schemas.General do
     end
 
     query do
+        field :my, :user do
+            resolve &AccountsResolver.resolve_user/3
+        end
+
         field :users, list_of(:user) do
             resolve &AccountsResolver.all_users/3
         end

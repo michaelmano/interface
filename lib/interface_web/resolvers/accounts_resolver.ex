@@ -21,4 +21,14 @@ defmodule InterfaceWeb.AccountsResolver do
         {:ok, %{token: token}}
     end
   end
+
+  def logout(_args, %{context: %{user: user}}) do
+    # TODO: make a callback to remove users token.
+    {:ok, nil}
+  end
+
+  def resolve_user(_root, _args, %{context: user}) do
+    {:ok, user}
+  end
+  def resolve_user(_root, _args, _context), do: {:ok, nil}
 end
