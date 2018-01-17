@@ -49,7 +49,7 @@ defmodule Interface.Accounts.User do
   def check_password(user, password) do
     case Bcrypt.checkpw(password, user.hashed_password) do
       true  -> {:ok, Map.take(user, @public_user_details)}
-      false -> {:error, nil}
+      false -> {:error, "Credentials do not match."}
     end
   end
 

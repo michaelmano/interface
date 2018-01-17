@@ -31,7 +31,7 @@ defmodule InterfaceWeb.Schemas.General do
 
         field :logout, type: :user do
             middleware InterfaceWeb.Middleware.Auth.Logout
-            resolve &AccountsResolver.logout/2
+            resolve &AccountsResolver.logout_user/3
           end
 
         field :create_user, :user do

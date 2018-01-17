@@ -47,11 +47,5 @@ config :interface, Interface.Repo,
 
 # Configures Elixir's Logger
 config :logger, :console,
-format: "$time $metadata[$level] $message\n",
-metadata: [:request_id]
-
-# Configures Guardian
-config :interface, Interface.Guardian,
-  issuer: "Interface",
-  ttl: { 30, :days },
-  secret_key: "this-is-for-development-only"
+  format: "$time $metadata[$level] $message\n",
+  metadata: [:request_id]

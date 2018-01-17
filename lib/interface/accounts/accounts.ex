@@ -127,12 +127,8 @@ defmodule Interface.Accounts do
     |> validate_and_return_user(password)
   end
 
-  defp validate_and_return_user(nil, _), do: {:invalid, nil}
+  defp validate_and_return_user(nil, _), do: {:error, "Credentials do not match."}
   defp validate_and_return_user(user, password) do
     User.check_password(user, password)
-  end
-
-  def test(args) do
-    {:ok, %{name: "the current users name is"}}
   end
 end

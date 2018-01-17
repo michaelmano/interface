@@ -4,10 +4,21 @@
 # This configuration file is loaded before any dependency and
 # is restricted to this project.
 use Mix.Config
-
 # General application configuration
 config :interface,
   ecto_repos: [Interface.Repo]
+
+# Configures Guardian
+config :interface, Interface.Guardian,
+  issuer: "Interface",
+  ttl: { 30, :days },
+  secret_key: System.get_env("GUARDIAN_SECRET")
+
+config :guardian, Guardian.DB,
+  repo: Interface.Repo,
+  schema_name: "guardian_tokens", # default
+  token_types: ["refresh_token"], # store all token types if not set
+  sweep_interval: 60 # default: 60 minutes
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

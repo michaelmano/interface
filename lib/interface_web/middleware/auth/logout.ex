@@ -1,7 +1,7 @@
 defmodule InterfaceWeb.Middleware.Auth.Logout do
     @behaviour Absinthe.Middleware
 
-    def call(resolution = %{context: %{user_id: _}}, _config) do
+    def call(resolution, _config) do
         resolution
     end
 
