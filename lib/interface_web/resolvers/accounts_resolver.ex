@@ -19,7 +19,7 @@ defmodule InterfaceWeb.AccountsResolver do
   def login(_root, args, _info) do
     case Accounts.authenticate(args) do
       {:ok, user} -> 
-        with {:ok, token, claims} <- Token.encode_and_sign(user, token_type: "access"), do: {:ok, %{token: token}}
+        with {:ok, token, claims} <- Token.encode_and_sign(user, %{user_email: user.email, user_id: user.id}, token_type: "refresh"), do: {:ok, %{token: token}}
       {:error, error} -> {:error, error}
     end
   end

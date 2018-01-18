@@ -34,9 +34,4 @@ defmodule InterfaceWeb.Auth.Token do
       {:ok, resource}
   end
   def resource_from_claims(), do: {:error, :reason_for_error}
-
-  def build_claims(claims, resource, _) do
-    result = Map.put(claims, "user_id", resource.id)
-    {:ok, result}
-  end
 end
