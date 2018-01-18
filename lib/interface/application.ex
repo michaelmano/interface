@@ -12,6 +12,7 @@ defmodule Interface.Application do
       supervisor(Interface.Repo, []),
       # Start the endpoint when the application starts
       supervisor(InterfaceWeb.Endpoint, []),
+      worker(Guardian.DB.Token.SweeperServer, []),
       # Start your own worker by calling: Interface.Worker.start_link(arg1, arg2, arg3)
       # worker(Interface.Worker, [arg1, arg2, arg3]),
     ]

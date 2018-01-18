@@ -9,15 +9,16 @@ config :interface,
   ecto_repos: [Interface.Repo]
 
 # Configures Guardian
-config :interface, Interface.Guardian,
+config :interface, InterfaceWeb.Auth.Token,
   issuer: "Interface",
+  hooks: Guardian.DB,
   ttl: { 30, :days },
   secret_key: System.get_env("GUARDIAN_SECRET")
 
 config :guardian, Guardian.DB,
   repo: Interface.Repo,
   schema_name: "guardian_tokens", # default
-  token_types: ["refresh_token"], # store all token types if not set
+  # token_types: ["refresh_token"], # store all token types if not set
   sweep_interval: 60 # default: 60 minutes
 
 # Import environment specific config. This must remain at the bottom

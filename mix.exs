@@ -44,7 +44,7 @@ defmodule Interface.Mixfile do
       {:absinthe_plug, "~> 1.4.2"},
       {:comeonin, "~> 4.0"},
       {:guardian, "~> 1.0.0"},
-      {:guardian_db, "~> 1.0"},
+      {:guardian_db, "~> 1.1.0"},
       {:slugger, "~> 0.2"},
     ]
   end

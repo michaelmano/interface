@@ -1,6 +1,6 @@
 defmodule InterfaceWeb.AccountsResolver do
   alias Interface.Accounts
-  alias Interface.Guardian
+  alias InterfaceWeb.Auth.Token
 
   def all_users(_root, _args, _info) do
     users = Accounts.list_users()
@@ -19,16 +19,12 @@ defmodule InterfaceWeb.AccountsResolver do
   def login(_root, args, _info) do
     case Accounts.authenticate(args) do
       {:ok, user} -> 
-        with {:ok, token, _} <- Guardian.encode_and_sign(user, token_type: "access"), do: {:ok, %{token: token}}
+        with {:ok, token, claims} <- Token.encode_and_sign(user, token_type: "access"), do: {:ok, %{token: token}}
       {:error, error} -> {:error, error}
     end
   end
 
   def logout_user(_root, _args, %{context: user}) do
-    with {:ok, claims} = Guardian.revoke(user.header_token) do
-      IO.inspect(claims)
-    end
-    IO.inspect(user)
     {:ok, user}
   end
 

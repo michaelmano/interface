@@ -5,7 +5,7 @@ defmodule InterfaceWeb.Router do
   pipeline :session do
     plug :fetch_session
     plug :fetch_flash
-    plug Guardian.Plug.Pipeline, module: Interface.Guardian,
+    plug Guardian.Plug.Pipeline, module: Interface.Auth.Token,
       error_handler: Auth.ErrorHandler
     plug Guardian.Plug.VerifyHeader, realm: "Bearer"
     plug Guardian.Plug.LoadResource, allow_blank: true

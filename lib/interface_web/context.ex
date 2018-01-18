@@ -18,10 +18,9 @@ defmodule InterfaceWeb.Context do
   end
 
   def build_context(conn) do
-    token = Guardian.Plug.current_token(conn)
     case Guardian.Plug.current_resource(conn) do
       nil -> {:error, "Invalid authorization token"}
-      user -> {:ok, Map.put(user, :header_token, token)}
+      user -> {:ok, user}
     end
   end
 end
