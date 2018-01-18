@@ -17,10 +17,11 @@ defmodule InterfaceWeb.AccountsResolver do
   def update(_root, args, _info), do: Accounts.update_user(args)
 
   def login(_root, args, _info) do
-    case Accounts.authenticate(args) do
-      {:ok, user} -> 
-        with {:ok, token, claims} <- Token.encode_and_sign(user, %{user_email: user.email, user_id: user.id}, token_type: "refresh"), do: {:ok, %{token: token}}
-      {:error, error} -> {:error, error}
+    with {:ok, user } <- Accounts.authenticate(args) do
+      claims = %{user_email: user.email, user_id: user.id}
+      with {:ok, token, _} <- Token.encode_and_sign(user, claims, token_type: "refresh") do
+        {:ok, %{token: token}}
+      end
     end
   end
 
