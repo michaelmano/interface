@@ -10,16 +10,16 @@ defmodule InterfaceWeb.Schemas.General do
         field :password, :string
         field :password_confirmation, :string
     end
-    
+
     object :session do
         field :token, :string
     end
 
     object :user do
-        field :id, non_null(:id)
-        field :slug, non_null(:string)
-        field :name, non_null(:string)
-        field :email, non_null(:string)
+      field :id, non_null(:id)
+      field :slug, non_null(:string)
+      field :name, non_null(:string)
+      field :email, non_null(:string)
     end
   
     mutation do

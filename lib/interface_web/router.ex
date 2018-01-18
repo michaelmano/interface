@@ -1,6 +1,14 @@
 defmodule InterfaceWeb.Router do
   use InterfaceWeb, :router
-  alias InterfaceWeb.{Auth,Schemas}
+  alias InterfaceWeb.{Auth,Schemas,AuthController}
+
+  pipeline :browser do
+    plug :accepts, ["html"]
+    plug :fetch_session
+    plug :fetch_flash
+    plug :protect_from_forgery
+    plug :put_secure_browser_headers
+  end
 
   pipeline :session do
     plug :fetch_session
@@ -23,8 +31,13 @@ defmodule InterfaceWeb.Router do
   end
 
   scope "/graphiql" do
-    pipe_through :api
     forward "/", Absinthe.Plug.GraphiQL,
     schema: Schemas.General
+  end
+
+  scope "/oauth2" do
+    pipe_through :api
+    post "/login", AuthController, :store
+    post "/logout", AuthController, :destroy
   end
 end

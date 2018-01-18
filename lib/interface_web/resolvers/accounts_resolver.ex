@@ -16,7 +16,8 @@ defmodule InterfaceWeb.AccountsResolver do
 
   def update(_root, args, _info), do: Accounts.update_user(args)
 
-  def login(_root, args, _info) do
+  def login(_root, args, info) do
+    IO.inspect(info)
     with {:ok, user } <- Accounts.authenticate(args) do
       claims = %{user_email: user.email, user_id: user.id}
       with {:ok, token, _} <- Token.encode_and_sign(user, claims, token_type: "refresh") do
