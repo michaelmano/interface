@@ -6,7 +6,6 @@ defmodule InterfaceWeb.AuthController do
   def init(opts), do: opts
 
   def store(conn, _params) do
-    IO.inspect(conn)
     headers = conn.req_headers
     |> List.foldl(Map.new(), &mapify/2)
 	  |> Poison.encode!
@@ -14,6 +13,7 @@ defmodule InterfaceWeb.AuthController do
       "IP" => to_string(:inet_parse.ntoa(conn.remote_ip)),
       "headers" => headers
     })
+    
     conn
     |> put_resp_content_type("application/json")
     |> send_resp(200, body)
