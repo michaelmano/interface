@@ -9,4 +9,11 @@ defmodule Interface.Helpers do
   def mapify({k,v}, m) do
     Map.put(m, k, v)
   end
+
+  def decode_basic_auth(headers) do
+    headers
+    |> List.to_string
+    |> String.replace_prefix("Basic ", "")
+    |> Base.decode64!
+  end
 end

@@ -9,12 +9,15 @@ defmodule InterfaceWeb.AuthController do
   def store(conn, _params) do
     headers = conn.req_headers
     |> List.foldl(Map.new(), &Helpers.mapify/2)
-	  |> Poison.encode!
+    |> Poison.encode!
     body = Poison.encode!(%{
       "IP" => to_string(:inet_parse.ntoa(conn.remote_ip)),
       "headers" => headers
     })
-    
+
+    credentials = Plug.Conn.get_req_header(conn, "authorization")
+    |> Helpers.decode_basic_auth
+
     conn
     |> put_resp_content_type("application/json")
     |> send_resp(200, body)
