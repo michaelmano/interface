@@ -121,7 +121,7 @@ defmodule Interface.Accounts do
     User.update_changeset(user, %{})
   end
 
-  def authenticate(%{email: email, password: password}) do
+  def authenticate(email, password) do
     User
     |> Repo.get_by(email: email)
     |> validate_and_return_user(password)

@@ -10,7 +10,11 @@ defmodule InterfaceWeb.Router do
     plug :put_secure_browser_headers
   end
 
-  pipeline :auth do
+  pipeline :basic_auth do
+    plug InterfaceWeb.Plugs.BasicAuth
+  end
+
+  pipeline :oauth do
     plug :fetch_session
     plug :fetch_flash
     plug Guardian.Plug.Pipeline, module: Interface.Auth.Token,
@@ -25,7 +29,7 @@ defmodule InterfaceWeb.Router do
   end
 
   scope "/api" do
-    pipe_through [:api, :auth]
+    pipe_through [:api, :oauth]
     forward "/", Absinthe.Plug,
       schema: Schemas.General
   end
@@ -35,9 +39,9 @@ defmodule InterfaceWeb.Router do
     schema: Schemas.General
   end
 
-  scope "/oauth2" do
-    pipe_through :api
+  scope "/auth" do
+    pipe_through [:api, :basic_auth]
+    post "/register", AuthController, :create
     post "/login", AuthController, :store
-    post "/logout", AuthController, :destroy
   end
 end

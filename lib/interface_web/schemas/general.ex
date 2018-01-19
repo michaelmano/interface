@@ -23,16 +23,7 @@ defmodule InterfaceWeb.Schemas.General do
     end
   
     mutation do
-        field :login, type: :session do
-            arg :email, non_null(:string)
-            arg :password, non_null(:string)
-            resolve &AccountsResolver.login/3
-        end
-
-        field :logout, type: :user do
-            resolve &AccountsResolver.logout_user/3
-          end
-
+       
         field :create_user, :user do
             arg :name, :string
             arg :email, :string

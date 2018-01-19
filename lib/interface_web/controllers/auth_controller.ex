@@ -1,25 +1,30 @@
 defmodule InterfaceWeb.AuthController do
   import Plug.Conn
   use InterfaceWeb, :controller
-  alias Interface.Helpers
   
   @doc false
   def init(opts), do: opts
-
-  def store(conn, _params) do
-    headers = conn.req_headers
-    |> List.foldl(Map.new(), &Helpers.mapify/2)
-    |> Poison.encode!
-    body = Poison.encode!(%{
-      "IP" => to_string(:inet_parse.ntoa(conn.remote_ip)),
-      "headers" => headers
-    })
-
-    credentials = Plug.Conn.get_req_header(conn, "authorization")
-    |> Helpers.decode_basic_auth
-
+  def index(conn, _) do
     conn
-    |> put_resp_content_type("application/json")
-    |> send_resp(200, body)
+  end
+  def create(conn, _params) do
+    conn
+  end
+  def store(conn, _params) do
+    conn
+    |> put_resp_content_type("text/plain")
+    |> send_resp(200, "test")
+  end
+  def show(conn, _params) do
+    conn
+  end
+  def edit(conn, _params) do
+    conn
+  end
+  def update(conn, _params) do
+    conn
+  end
+  def destroy(conn, _params) do
+    conn
   end
 end

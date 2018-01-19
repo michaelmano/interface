@@ -1,6 +1,5 @@
 defmodule InterfaceWeb.AccountsResolver do
   alias Interface.Accounts
-  alias InterfaceWeb.Auth.Token
 
   def all_users(_root, _args, _info) do
     users = Accounts.list_users()
@@ -15,16 +14,6 @@ defmodule InterfaceWeb.AccountsResolver do
   def create_user(_root, args, _info), do: Accounts.create_user(args)
 
   def update(_root, args, _info), do: Accounts.update_user(args)
-
-  def login(_root, args, info) do
-    IO.inspect(info)
-    with {:ok, user } <- Accounts.authenticate(args) do
-      claims = %{user_email: user.email, user_id: user.id}
-      with {:ok, token, _} <- Token.encode_and_sign(user, claims, token_type: "refresh") do
-        {:ok, %{token: token}}
-      end
-    end
-  end
 
   def logout_user(_root, _args, %{context: user}) do
     {:ok, user}
