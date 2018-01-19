@@ -1,4 +1,4 @@
-defmodule InterfaceWeb.Context do
+defmodule InterfaceWeb.Plugs.Authenticate do
   import Plug.Conn
 
   def init(opts), do: opts
@@ -18,7 +18,6 @@ defmodule InterfaceWeb.Context do
   end
 
   def build_context(conn) do
-    IO.inspect(Guardian.Plug.current_claims(conn))
     case Guardian.Plug.current_resource(conn) do
       nil -> {:error, "Invalid authorization token"}
       user -> {:ok, user}

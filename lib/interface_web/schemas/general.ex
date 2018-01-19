@@ -30,7 +30,6 @@ defmodule InterfaceWeb.Schemas.General do
         end
 
         field :logout, type: :user do
-            middleware InterfaceWeb.Middleware.Auth.Logout
             resolve &AccountsResolver.logout_user/3
           end
 
