@@ -25,4 +25,14 @@ defmodule InterfaceWeb.AccountsResolver do
     {:ok, user}
   end
   def resolve_user(_root, _args, _context), do: {:ok, nil}
+
+  # def login_user([username|[password|_]], info) do
+  #   with {:ok, user } <- Accounts.authenticate(username, password) do
+  #     claims = %{user_id: user.id, device_info: info}
+  #     with {:ok, refresh, _} <- Token.encode_and_sign(user, claims, token_type: "refresh"),
+  #       {:ok, access, _} <- Token.encode_and_sign(user, token_type: "access") do
+  #         {:ok, %{refresh: refresh, access: access}}
+  #     end
+  #   end
+  # end
 end

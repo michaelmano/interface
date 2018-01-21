@@ -24,9 +24,9 @@ config :logger, :console,
 # Configure your database
 config :elixir_stream, ElixirStream.Repo,
   adapter: Ecto.Adapters.Postgres,
-  username: System.get_env("PRODUCTION_DATABASE_USERNAME"),
-  password: System.get_env("PRODUCTION_DATABASE_PASSWORD"),
-  database: System.get_env("PRODUCTION_DATABASE_NAME"),
+  username: System.get_env("DATABASE_USERNAME"),
+  password: System.get_env("DATABASE_PASSWORD"),
+  database: System.get_env("DATABASE_NAME"),
   size: 20 # The amount of database connections in the pool
 # Finally import the config/prod.secret.exs
 # which should be versioned separately.
