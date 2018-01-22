@@ -39,7 +39,6 @@ defmodule InterfaceWeb.Auth.Token do
     claims = %{user_id: user.id, device_info: device_info}
     with {:ok, refresh, _} <- encode_and_sign(user, claims, token_type: "refresh"),
         {:ok, access, _} <- encode_and_sign(user, claims, token_type: "access") do
-          #Guardian.Plug.sign_in(conn, user, access)
           %{user: user, tokens: %{ 
             refresh: %{ expires: 365, token: refresh },
             access: %{ expires: 7, token: access } },

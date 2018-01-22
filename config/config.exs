@@ -12,10 +12,12 @@ config :interface,
 config :interface, InterfaceWeb.Auth.Token,
   issuer: "Interface",
   hooks: Guardian.DB,
+  ttl: { 1, :days },
   token_ttl: %{
-    "refresh" => {365, :days},
-    "access" => {7, :days},
+    "refresh" => { 30, :days },
+    "access" =>  {1, :days}
   },
+  verify_issuer: true,
   secret_key: System.get_env("GUARDIAN_SECRET")
 
 config :guardian, Guardian.DB,
