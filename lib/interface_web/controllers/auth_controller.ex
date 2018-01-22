@@ -39,8 +39,8 @@ defmodule InterfaceWeb.AuthController do
   def update(conn, _params) do
     token = conn.private[:guardian_default_token]
     type = Map.get(conn.private[:guardian_default_claims], "typ")
-    # new_token = Token.exchange(token, "refresh", "access")
-    conn |> send_resp(200, "ta da")
+    {:ok, _old_stuff, {new_token, new_claims}} = Token.exchange(token, "refresh", "access")
+    Format.json_resp(conn, 200, %{token: new_token})
   end
   
   def destroy(conn, _params) do
