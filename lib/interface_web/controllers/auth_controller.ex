@@ -44,6 +44,10 @@ defmodule InterfaceWeb.AuthController do
   end
   
   def destroy(conn, _params) do
-    conn
+    conn.private[:guardian_default_token]
+    |> Token.revoke()
+    |> case do
+      {:ok, _} -> Format.json_resp(conn, 200, "You have been logged out.")
+    end
   end
 end

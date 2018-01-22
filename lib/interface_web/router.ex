@@ -46,6 +46,9 @@ defmodule InterfaceWeb.Router do
     pipe_through [:api, :basic_auth, :guardian]
     post "/register", AuthController, :create
     post "/login", AuthController, :store
+
+    pipe_through :authenticated
+    post "/logout", AuthController, :destroy
     post "/refresh", AuthController, :update
   end
 end
