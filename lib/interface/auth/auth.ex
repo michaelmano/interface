@@ -11,7 +11,15 @@ defmodule Interface.Auth do
   Generates or updates a failed login attempt.
   """
   def failed_login_attempt(params) do
-    IO.inspect(params)
+    ip = params.ip
+    |> :inet_parse.ntoa()
+    |> to_string()
+
+    get_failed_login_attempts!(ip)
+    |> case do
+      nil -> create_failed_login_attempts(%{ip: ip, attempts: 1})
+      response -> 
+    end
   end
 
   @doc """
@@ -41,7 +49,11 @@ defmodule Interface.Auth do
       ** (Ecto.NoResultsError)
 
   """
-  def get_failed_login_attempts!(id), do: Repo.get!(FailedLoginAttempts, id)
+  def get_failed_login_attempts!(ip) do
+    FailedLoginAttempts
+    |> where([f], f.ip == ^ip)
+    |> Repo.one
+  end
 
   @doc """
   Creates a failed_login_attempts.
