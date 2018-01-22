@@ -1,6 +1,6 @@
 defmodule InterfaceWeb.Plugs.BasicAuth do
   import Plug.Conn
-  alias Interface.Helpers
+  alias InterfaceWeb.Format
 
   def init(opts), do: opts
   def call(conn, _) do
@@ -22,7 +22,7 @@ defmodule InterfaceWeb.Plugs.BasicAuth do
 
   defp build_response(errors, conn) do
     case Enum.any?(errors) do
-      true -> Helpers.json_resp(conn, 400, %{errors: errors}) |> halt()
+      true -> Format.json_resp(conn, 400, %{errors: errors}) |> halt()
       false -> conn
     end
   end

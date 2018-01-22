@@ -2,7 +2,7 @@ defmodule InterfaceWeb.AuthController do
   import Plug.Conn
   use InterfaceWeb, :controller
   alias Interface.Accounts
-  alias Interface.Helpers
+  alias InterfaceWeb.Format
   alias InterfaceWeb.Auth.Token
 
   @doc false
@@ -17,13 +17,13 @@ defmodule InterfaceWeb.AuthController do
   end
 
   def store(conn, _params) do
-    device_info = Helpers.format_device_info(conn)
-    [username|[password|_]] = Helpers.format_basic_auth(conn)
+    device_info = Format.format_device_info(conn)
+    [username|[password|_]] = Format.format_basic_auth(conn)
     response = case Accounts.authenticate(username, password) do
       {:ok, user} -> 
         Token.new_device(user, device_info)
       {:error, error} -> 
-        Helpers.json_resp(conn, 400, %{errors: error})
+        Format.json_resp(conn, 400, %{errors: error})
         |> halt()
     end
     conn

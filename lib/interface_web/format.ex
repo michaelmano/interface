@@ -1,4 +1,4 @@
-defmodule Interface.Helpers do
+defmodule InterfaceWeb.Format do
   import Plug.Conn
   @doc """
   Simple helper functions that do not require their own module.
