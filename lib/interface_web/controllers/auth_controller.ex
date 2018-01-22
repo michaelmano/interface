@@ -2,6 +2,7 @@ defmodule InterfaceWeb.AuthController do
   import Plug.Conn
   use InterfaceWeb, :controller
   alias Interface.Accounts
+  alias Interface.Auth
   alias InterfaceWeb.Format
   alias InterfaceWeb.Auth.Token
 
@@ -24,6 +25,7 @@ defmodule InterfaceWeb.AuthController do
         response = Token.new_device(conn, user, device_info)
         Format.json_resp(conn, 200, response)
       {:error, error} -> 
+        Auth.failed_login_attempt(%{ip: conn.remote_ip})
         Format.json_resp(conn, 400, %{errors: error}) |> halt()
     end
   end
