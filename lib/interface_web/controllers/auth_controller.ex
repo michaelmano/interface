@@ -18,7 +18,7 @@ defmodule InterfaceWeb.AuthController do
 
   def store(conn, _params) do
     device_info = Format.format_device_info(conn)
-    [username|[password|_]] = Format.format_basic_auth(conn)
+    [username|[password|_]] = Format.format_header(conn, "authorization") |> Format.decode_basic
     case Accounts.authenticate(username, password) do
       {:ok, user} ->
         response = Token.new_device(conn, user, device_info)
@@ -37,7 +37,10 @@ defmodule InterfaceWeb.AuthController do
   end
   
   def update(conn, _params) do
-    conn
+    token = conn.private[:guardian_default_token]
+    type = Map.get(conn.private[:guardian_default_claims], "typ")
+    # new_token = Token.exchange(token, "refresh", "access")
+    conn |> send_resp(200, "ta da")
   end
   
   def destroy(conn, _params) do

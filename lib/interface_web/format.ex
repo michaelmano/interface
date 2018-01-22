@@ -22,10 +22,14 @@ defmodule InterfaceWeb.Format do
     |> get_header("device-info")
   end
 
-  def format_basic_auth(conn) do
+  def format_header(conn, header, prefix \\ "Basic ") do
     conn
-    |> get_header("authorization")
-    |> String.replace_prefix("Basic ", "")
+    |> get_header(header)
+    |> String.replace_prefix(prefix, "")
+  end
+
+  def decode_basic(header) do
+    header
     |> Base.decode64!
     |> String.split(":")
   end

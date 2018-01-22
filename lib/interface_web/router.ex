@@ -14,13 +14,16 @@ defmodule InterfaceWeb.Router do
     plug InterfaceWeb.Plugs.BasicAuth
   end
 
-  pipeline :oauth do
+  pipeline :guardian do
     plug :fetch_session
     plug :fetch_flash
     plug Guardian.Plug.Pipeline, module: InterfaceWeb.Auth.Token,
       error_handler: Auth.ErrorHandler
     plug Guardian.Plug.VerifyHeader, realm: "Bearer"
     plug Guardian.Plug.LoadResource, allow_blank: true
+  end
+
+  pipeline :authenticated do
     plug InterfaceWeb.Plugs.Authenticate
   end
 
@@ -29,7 +32,7 @@ defmodule InterfaceWeb.Router do
   end
 
   scope "/api" do
-    pipe_through [:api, :oauth]
+    pipe_through [:api, :guardian, :authenticated]
     forward "/", Absinthe.Plug,
       schema: Schemas.General
   end
@@ -40,9 +43,9 @@ defmodule InterfaceWeb.Router do
   end
 
   scope "/auth" do
-    pipe_through [:api, :basic_auth]
+    pipe_through [:api, :basic_auth, :guardian]
     post "/register", AuthController, :create
     post "/login", AuthController, :store
-    post "/refresh", TokenController, :create
+    post "/refresh", AuthController, :update
   end
 end
