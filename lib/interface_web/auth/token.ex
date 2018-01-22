@@ -41,7 +41,7 @@ defmodule InterfaceWeb.Auth.Token do
         {:ok, access, _} <- encode_and_sign(user, claims, token_type: "access") do
           %{user: user, tokens: %{ 
             refresh: %{ expires: 365, token: refresh },
-            access: %{ expires: 7, token: access } },
+            access: %{ expires: 1, token: access } },
           }
       end
   end

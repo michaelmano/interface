@@ -14,7 +14,7 @@ config :interface, InterfaceWeb.Auth.Token,
   hooks: Guardian.DB,
   ttl: { 1, :days },
   token_ttl: %{
-    "refresh" => { 30, :days },
+    "refresh" => { 365, :days },
     "access" =>  {1, :days}
   },
   verify_issuer: true,
