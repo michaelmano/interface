@@ -21,7 +21,8 @@ defmodule InterfaceWeb.AuthController do
     [username|[password|_]] = Format.format_basic_auth(conn)
     response = case Accounts.authenticate(username, password) do
       {:ok, user} -> 
-        Token.new_device(user, device_info)
+        result = Token.new_device(user, device_info)
+        Format.json_resp(conn, 200, result)
       {:error, error} -> 
         Format.json_resp(conn, 400, %{errors: error})
         |> halt()
