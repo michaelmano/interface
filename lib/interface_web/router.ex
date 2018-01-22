@@ -1,6 +1,6 @@
 defmodule InterfaceWeb.Router do
   use InterfaceWeb, :router
-  alias InterfaceWeb.{Auth,Schemas,AuthController}
+  alias InterfaceWeb.{Auth,Schemas,AuthController,TokenController}
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -19,6 +19,7 @@ defmodule InterfaceWeb.Router do
     plug :fetch_flash
     plug Guardian.Plug.Pipeline, module: Interface.Auth.Token,
       error_handler: Auth.ErrorHandler
+    plug Guardian.Plug.VerifySession
     plug Guardian.Plug.VerifyHeader, realm: "Bearer"
     plug Guardian.Plug.LoadResource, allow_blank: true
     plug InterfaceWeb.Plugs.Authenticate
@@ -43,5 +44,6 @@ defmodule InterfaceWeb.Router do
     pipe_through [:api, :basic_auth]
     post "/register", AuthController, :create
     post "/login", AuthController, :store
+    post "/refresh", TokenController, :create
   end
 end
