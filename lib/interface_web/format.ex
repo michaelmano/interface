@@ -19,7 +19,7 @@ defmodule InterfaceWeb.Format do
 
   def format_device_info(conn) do
     conn
-    |> get_header("device_info")  
+    |> get_header("device-info")
   end
 
   def format_basic_auth(conn) do

@@ -19,16 +19,12 @@ defmodule InterfaceWeb.AuthController do
   def store(conn, _params) do
     device_info = Format.format_device_info(conn)
     [username|[password|_]] = Format.format_basic_auth(conn)
-    response = case Accounts.authenticate(username, password) do
+    case Accounts.authenticate(username, password) do
       {:ok, user} -> 
-        result = Token.new_device(user, device_info)
-        Format.json_resp(conn, 200, result)
+        Format.json_resp(conn, 200, Token.new_device(user, device_info))
       {:error, error} -> 
-        Format.json_resp(conn, 400, %{errors: error})
-        |> halt()
+        Format.json_resp(conn, 400, %{errors: error}) |> halt()
     end
-    conn
-    |> json(response)
   end
   
   def show(conn, _params) do
