@@ -17,4 +17,23 @@ defmodule Interface.Helpers do
     |> put_resp_header("content-type", "application/json; charset=utf-8")
     |> send_resp(code, Poison.encode!(data, pretty: true))
   end
+
+  def format_device_info(conn) do
+    conn
+    |> get_header("device_info")  
+  end
+
+  def format_basic_auth(conn) do
+    conn
+    |> get_header("authorization")
+    |> String.replace_prefix("Basic ", "")
+    |> Base.decode64!
+    |> String.split(":")
+  end
+
+  def get_header(conn, header) do
+    conn
+    |> get_req_header(header)
+    |> List.first
+  end
 end
