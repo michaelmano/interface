@@ -13,6 +13,6 @@
 # alias Interface.Repo
 alias Interface.Accounts
 users = [
-  %{name: "Kitty McFluffs", email: "mcfluffs@kitty.com", password: "password", password_confirmation: "password"},
+  %{name: "Example User", email: "user@example.com", password: "password", password_confirmation: "password"},
 ]
 for user <- users, do: Accounts.create_user(user)
