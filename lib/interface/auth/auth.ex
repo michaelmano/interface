@@ -18,7 +18,7 @@ defmodule Interface.Auth do
     get_failed_login_attempts!(ip)
     |> case do
       nil -> create_failed_login_attempts(%{ip: ip, attempts: 1})
-      response -> 
+      response -> response
     end
   end
 

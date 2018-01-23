@@ -22,7 +22,7 @@ defmodule InterfaceWeb.AuthController do
     [username|[password|_]] = Format.format_header(conn, "authorization") |> Format.decode_basic
     case Accounts.authenticate(username, password) do
       {:ok, user} ->
-        response = Token.new_device(conn, user, device_info)
+        response = Token.new_device(user, device_info)
         Format.json_resp(conn, 200, response)
       {:error, error} -> 
         Auth.failed_login_attempt(%{ip: conn.remote_ip})

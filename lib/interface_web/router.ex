@@ -1,6 +1,6 @@
 defmodule InterfaceWeb.Router do
   use InterfaceWeb, :router
-  alias InterfaceWeb.{Auth,Schemas,AuthController,TokenController}
+  alias InterfaceWeb.{Auth,Schemas,AuthController}
 
   pipeline :browser do
     plug :accepts, ["html"]
