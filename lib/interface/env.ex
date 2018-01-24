@@ -2,13 +2,11 @@ defmodule Interface.Env do
   @moduledoc """
   Loads the .env file into memory and sets system environment variables.
   """
-  defmacro __using__(_), do: load_env()
-
   @doc false
-  defp load_env do
+  def run do
     case File.read(".env") do
       {:ok, body} -> load_env_into_memory(body)
-      {:error, error} -> exit_application(error)
+      {:error, _} -> exit_application()
     end
   end
 
@@ -28,7 +26,7 @@ defmodule Interface.Env do
     |> System.put_env()
   end
 
-  defp exit_application(error) do
+  defp exit_application() do
     IO.puts("Please make sure that the .env file exists and is formatted correctly, you can copy the .env.example.")
     System.stop
   end

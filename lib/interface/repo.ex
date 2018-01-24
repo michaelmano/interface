@@ -4,6 +4,7 @@ defmodule Interface.Repo do
   Sets the option values for the database details.
   """
   def init(_, opts) do
+    Interface.Env.run()
     {:ok, opts
     |> Keyword.put(:url, System.get_env("DATABASE_URL"))
     |> Keyword.put(:database, System.get_env("DATABASE_NAME"))

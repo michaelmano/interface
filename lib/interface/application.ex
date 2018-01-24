@@ -1,6 +1,5 @@
 defmodule Interface.Application do
   use Application
-  use Interface.Env
 
   # See https://hexdocs.pm/elixir/Application.html
   # for more information on OTP Applications
