@@ -19,3 +19,11 @@ config :interface, InterfaceWeb.Endpoint,
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
+
+# Configure your database
+config :elixir_stream, ElixirStream.Repo,
+  adapter: Ecto.Adapters.MySQL,
+  username: System.get_env("DATABASE_USERNAME"),
+  password: System.get_env("DATABASE_PASSWORD"),
+  database: System.get_env("DATABASE_NAME"),
+  size: 20 # The amount of database connections in the pool

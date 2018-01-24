@@ -40,3 +40,12 @@ config :phoenix, :stacktrace_depth, 20
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
+
+# Configure your database
+config :interface, Interface.Repo,
+  adapter: Ecto.Adapters.MySQL,
+  username: System.get_env("DATABASE_USERNAME"),
+  password: System.get_env("DATABASE_PASSWORD"),
+  database: System.get_env("DATABASE_NAME"),
+  hostname: System.get_env("DATABASE_HOSTNAME"),
+  pool_size: 20
