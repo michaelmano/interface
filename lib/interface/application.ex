@@ -1,10 +1,12 @@
 defmodule Interface.Application do
   use Application
+  alias Interface.Env
 
   # See https://hexdocs.pm/elixir/Application.html
   # for more information on OTP Applications
   def start(_type, _args) do
     import Supervisor.Spec
+    Env.load()
 
     # Define workers and child supervisors to be supervised
     children = [
