@@ -5,6 +5,7 @@ defmodule Interface.Repo.Migrations.CreateFailedLoginAttempts do
     create table(:failed_login_attempts) do
       add :ip, :string
       add :attempts, :integer
+      add :timeout, :utc_datetime
 
       timestamps()
     end
