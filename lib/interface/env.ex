@@ -12,6 +12,7 @@ defmodule Interface.Env do
     end
   end
 
+  @doc false
   defp load_env_into_memory(env) do
     env
     |> String.split("\n", trim: true)
