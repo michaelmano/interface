@@ -14,8 +14,6 @@ defmodule Interface.Env do
 
   defp load_env_into_memory(env) do
     env
-    |> Tuple.to_list
-    |> List.last
     |> String.split("\n", trim: true)
     |> Enum.map(&format_command(&1))
   end
