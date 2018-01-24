@@ -28,12 +28,7 @@ defmodule Interface.Env do
   end
 
   defp exit_application(error) do
-    IO.inspect(error)
-    IO.puts("An error has occured.")
-    IO.puts("Please make sure of the following:")
-    IO.puts("1) The .env file exists.")
-    IO.puts("2) It has the correct formatting.")
-    IO.puts("You can copy the .env.example")
+    IO.puts("Please make sure that the .env file exists and is formatted correctly, you can copy the .env.example.")
     System.stop
   end
 end
