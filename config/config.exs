@@ -27,6 +27,7 @@ config :guardian, Guardian.DB,
 # Configures the endpoint
 config :interface, InterfaceWeb.Endpoint,
   secret_key_base: System.get_env("APPLICATION_SECRET")
+
 # Import configs. these must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env}.exs"
