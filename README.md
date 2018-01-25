@@ -1,10 +1,10 @@
 # Interface
 
-To start your Phoenix server:
-
+## Getting Started:
+  * Set up the environment and variables by copying over the `.env.example` to `.env`
   * Install dependencies with `mix deps.get`
-  * Create and migrate your database with `mix ecto.create && mix ecto.migrate`
-  * Start Phoenix endpoint with `mix phx.server`
+  * Create, migrate and seed your database with `mix ecto.setup`
+  * Start Interface with `./run.sh`
 
 Now you can visit [`localhost:4000`](http://localhost:4000/graphiql) from your browser.
 
