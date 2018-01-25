@@ -26,7 +26,7 @@ defmodule InterfaceWeb.AuthController do
         Format.json_resp(conn, 200, response)
       {:error, error} -> 
         Auth.failed_login_attempt(%{ip: conn.remote_ip})
-        Format.json_resp(conn, 400, %{errors: error}) |> halt()
+        Format.json_resp(conn, 400, %{error: error}) |> halt()
     end
   end
   
