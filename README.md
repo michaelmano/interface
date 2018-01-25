@@ -43,9 +43,9 @@ curl -X POST \
 ## Example to request all users
 ```
 curl -X POST \
-  -H 'Authorization: Bearer <TOKEN>' \
+  -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJJbnRlcmZhY2UiLCJkZXZpY2VfaW5mbyI6IkdhbGF4eSBTNiIsImV4cCI6MTUxNzQ0Nzg3OSwiaWF0IjoxNTE2ODQzMDc5LCJpc3MiOiJJbnRlcmZhY2UiLCJqdGkiOiIzNmU4MjJhMC05YmRlLTQ5NzYtYTM0Ny0zZjBhYjk0YTI4NGIiLCJuYmYiOjE1MTY4NDMwNzgsInN1YiI6IjEiLCJ0eXAiOiJhY2Nlc3MiLCJ1c2VyX2lkIjoxfQ.E7k5qyUt-t37Tets3VfbxC1wJvQdyVKE_dG0rhucaR8tHyPBMOgL-tXIRblY3Ra9OuowSiULBh6ZXeY-8E9FNg' \
   -H 'Content-Type: application/json' \
-  -d '{ "query": "{ my { name } }" }' \
+  -d '{ "query": "{ users { name } }" }' \
     http://localhost:4000/api
 ```
 
