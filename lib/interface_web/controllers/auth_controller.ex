@@ -6,6 +6,8 @@ defmodule InterfaceWeb.AuthController do
   alias InterfaceWeb.Format
   alias InterfaceWeb.Auth.Token
 
+  action_fallback InterfaceWeb.FallbackController
+
   @doc false
   def init(opts), do: opts
   
@@ -15,18 +17,13 @@ defmodule InterfaceWeb.AuthController do
   
   def create(conn, _params) do
     conn
-    # [username, password, device_info] = Auth.get_header_info(conn)
-    # case Accounts.authenticate(username, password) do
-    #   {:ok, user} -> Format.json_resp(conn, 200, Token.new_device(user, device_info))
-    #   {:error, error} -> Format.json_resp(conn, 400, %{error: error}) |> halt()
-    # end
   end
 
   # TODO: Create Library that will throttle login attempts and add captcha.
   def store(conn, _params) do
     [username, password, device_info] = Auth.get_header_info(conn)
     case Accounts.authenticate(username, password) do
-      {:ok, user} -> Format.json_resp(conn, 200, Token.new_device(user, device_info))
+      {:ok, user} -> render(conn, "show.json", Token.new_device(user, device_info))
       {:error, error} -> Format.json_resp(conn, 400, %{error: error}) |> halt()
     end
   end

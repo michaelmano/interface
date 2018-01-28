@@ -37,12 +37,15 @@ defmodule InterfaceWeb.Auth.Token do
 
   def new_device(user, device_info) do
     claims = %{user_id: user.id, device_info: device_info}
-    with {:ok, refresh, _} <- encode_and_sign(user, claims, token_type: "refresh"),
-        {:ok, access, _} <- encode_and_sign(user, claims, token_type: "access") do
-          %{data: %{user: user, tokens: %{ 
-            refresh: %{ expires: 365, token: refresh },
-            access: %{ expires: 1, token: access } },
-          }}
+    with {:ok, refresh, ref_claims} <- encode_and_sign(user, claims, token_type: "refresh"),
+        {:ok, access, acc_claims} <- encode_and_sign(user, claims, token_type: "access") do
+          %{
+            user: user,
+            tokens: [
+              %{claims: ref_claims, token: refresh},
+              %{claims: acc_claims, token: access},
+            ]
+          }
       end
   end
 end
