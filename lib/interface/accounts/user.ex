@@ -5,10 +5,7 @@ defmodule Interface.Accounts.User do
 
   use Ecto.Schema
   import Ecto.Changeset
-  alias Comeonin.Bcrypt
   alias Interface.Accounts.User
-
-  @public_user_details [:id, :name, :email, :slug]
 
   schema "users" do
     field :email, :string, unique: true
@@ -44,13 +41,6 @@ defmodule Interface.Accounts.User do
       :slug
     ])
     |> validate_fields()
-  end
-
-  def check_password(user, password) do
-    case Bcrypt.checkpw(password, user.hashed_password) do
-      true  -> {:ok, Map.take(user, @public_user_details)}
-      false -> {:error, "Credentials do not match."}
-    end
   end
 
   defp cast_user(user, attrs) do

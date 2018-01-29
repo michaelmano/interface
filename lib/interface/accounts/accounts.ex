@@ -120,15 +120,4 @@ defmodule Interface.Accounts do
   def update_changeset(user) do
     User.update_changeset(user, %{})
   end
-
-  def authenticate(email, password) do
-    User
-    |> Repo.get_by(email: email)
-    |> validate_and_return_user(password)
-  end
-
-  defp validate_and_return_user(nil, _), do: {:error, "Credentials do not match."}
-  defp validate_and_return_user(user, password) do
-    User.check_password(user, password)
-  end
 end

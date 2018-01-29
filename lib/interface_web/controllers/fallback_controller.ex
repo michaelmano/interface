@@ -5,6 +5,7 @@ defmodule InterfaceWeb.FallbackController do
   See `Phoenix.Controller.action_fallback/1` for more details.
   """
   use InterfaceWeb, :controller
+  alias Plug.Conn.Status
 
   def call(conn, {:error, %Ecto.Changeset{} = changeset}) do
     conn
@@ -12,21 +13,15 @@ defmodule InterfaceWeb.FallbackController do
     |> render(InterfaceWeb.ChangesetView, "error.json", changeset: changeset)
   end
 
-  def call(conn, {:error, :not_found}) do
-    conn
-    |> put_status(:not_found)
-    |> render(InterfaceWeb.ErrorView, :"404")
-  end
-
-  def call(conn, {:error, %{status: status}}) do
+  def call(conn, {:error, status, message}) do
     conn
     |> put_status(status)
-    |> render(InterfaceWeb.ErrorView, :"#{status}")
+    |> render(InterfaceWeb.ErrorView, :"error", %{message: message})
   end
 
   def call(conn, _) do
     conn
     |> put_status(500)
-    |> render(InterfaceWeb.ErrorView, :"500")
+    |> render(InterfaceWeb.ErrorView, :"error", %{message: "Shit son."})
   end
 end

@@ -29,9 +29,10 @@ defmodule InterfaceWeb.Format do
   end
 
   def decode_basic(header) do
-    header
-    |> Base.decode64!
-    |> String.split(":")
+    case header |> Base.decode64 do
+      {:ok, val} -> {:ok, String.split(val, ":")}
+      :error -> {:error, "String is not valid Base64"}
+    end
   end
 
   def get_header(conn, header) do

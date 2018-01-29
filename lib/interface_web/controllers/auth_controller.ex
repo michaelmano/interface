@@ -21,10 +21,9 @@ defmodule InterfaceWeb.AuthController do
 
   # TODO: Create Library that will throttle login attempts and add captcha.
   def store(conn, _params) do
-    [username, password, device_info] = Auth.get_header_info(conn)
-    case Accounts.authenticate(username, password) do
-      {:ok, user} -> render(conn, "show.json", Token.new_device(user, device_info))
-      {:error, error} -> {:error, error}
+    case Auth.get_header_info(conn) do
+      {:ok, values} -> render_authenticated_user(conn, values)
+      {:error, message} -> {:error, :im_a_teapot, message}
     end
   end
   
@@ -49,6 +48,13 @@ defmodule InterfaceWeb.AuthController do
     |> Token.revoke()
     |> case do
       {:ok, _} -> Format.json_resp(conn, 200, "You have been logged out.")
+    end
+  end
+
+  defp render_authenticated_user(conn, {username, password, device_info}) do
+    case Auth.authenticate_user(username, password) do
+      {:ok, user} -> render(conn, "show.json", Token.new_device(user, device_info))
+      {:error, message} -> {:error, :im_a_teapot, message}
     end
   end
 end
