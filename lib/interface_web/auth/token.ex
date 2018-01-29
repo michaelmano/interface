@@ -42,8 +42,8 @@ defmodule InterfaceWeb.Auth.Token do
           %{
             user: user,
             tokens: [
-              %{claims: ref_claims, token: refresh},
-              %{claims: acc_claims, token: access},
+              %{ token: access, claims: acc_claims},
+              %{ token: refresh, claims: ref_claims},
             ]
           }
       end

@@ -6,7 +6,8 @@ defmodule Interface.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
   alias Interface.Accounts.User
-
+  alias Comeonin.Bcrypt
+  
   schema "users" do
     field :email, :string, unique: true
     field :name, :string
