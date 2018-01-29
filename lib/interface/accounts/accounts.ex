@@ -86,9 +86,9 @@ defmodule Interface.Accounts do
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_user(%{id: id, user: attrs}) do
-    Repo.get!(User, id)
-    |> User.update_changeset(insert_slug(attrs))
+  def update_user(user, fields) do
+    user
+    |> User.update_changeset(insert_slug(fields))
     |> Repo.update
   end
 

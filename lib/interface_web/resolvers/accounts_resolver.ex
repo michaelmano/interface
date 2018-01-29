@@ -1,5 +1,6 @@
 defmodule InterfaceWeb.AccountsResolver do
   alias Interface.Accounts
+  alias Interface.Auth
 
   def all_users(_root, _args, _info) do
     users = Accounts.list_users()
@@ -11,18 +12,12 @@ defmodule InterfaceWeb.AccountsResolver do
     {:ok, user}
   end
 
-  def create_user(_root, args, _info), do: Accounts.create_user(args)
-
-  def update(_root, args, _info), do: Accounts.update_user(args)
-
-  def logout_user(_root, _args, %{context: user}) do
-    {:ok, user}
+  def update(_root, %{fields: fields}, %{context: user}) do
+    Accounts.update_user(user, fields)
   end
-
-  def logout_user(_root, _args, _context), do: {:error, "You are not currently logged in."}
 
   def resolve_user(_root, _args, %{context: user}) do
     {:ok, user}
   end
-  def resolve_user(_root, _args, _context), do: {:ok, nil}
+  def resolve_user(_root, _args, _info), do: {:ok, nil}
 end

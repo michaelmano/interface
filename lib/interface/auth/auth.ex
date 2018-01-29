@@ -36,4 +36,8 @@ defmodule Interface.Auth do
       false -> {:error, "Credentials do not match."}
     end
   end
+
+  def get_current_user(conn) do
+    
+  end
 end

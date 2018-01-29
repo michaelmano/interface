@@ -84,7 +84,8 @@ defmodule Interface.Accounts.User do
   defp format_email_address(%{changes: %{email: email}} = changeset) do
     change(changeset, email: String.downcase(email))
   end
-  
+  defp format_email_address(changeset), do: changeset
+
   defp confirm_passwords_match(%{changes: %{
     password: password,
     password_confirmation: password_confirmation

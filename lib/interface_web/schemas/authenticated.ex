@@ -20,8 +20,7 @@ defmodule InterfaceWeb.Schemas.Authenticated do
 
   mutation do
     field :update, type: :user do
-      arg :id, non_null(:integer)
-      arg :user, :user_params
+      arg :fields, :user_params
       resolve &AccountsResolver.update/3
     end
   end
