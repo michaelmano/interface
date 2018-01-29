@@ -37,12 +37,24 @@ defmodule Interface.Accounts do
   """
   def get_user!(args) do
     User
-    |> determine_user_lookup_method(args)
+    |> build_query(args)
     |> Repo.one
   end
 
-  defp determine_user_lookup_method(user, %{id: id}), do: user |> where([u], u.id == ^id)
-  defp determine_user_lookup_method(user, %{slug: slug}), do: user |> where([u], u.slug == ^slug)
+  defp build_query(user, %{id: id, slug: slug, name: name}) do
+    user 
+    |> where([u], u.name == ^name) 
+    |> where([u], u.id == ^id)
+    |> where([u], u.slug == ^slug)
+  end
+
+  defp build_query(user, %{id: id}) do
+    user |> where([u], u.id == ^id)
+  end
+
+  defp build_query(user, %{slug: slug}) do
+    user |> where([u], u.slug == ^slug)
+  end
 
   @doc """
   Creates a user.

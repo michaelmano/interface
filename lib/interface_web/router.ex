@@ -14,6 +14,10 @@ defmodule InterfaceWeb.Router do
     plug InterfaceWeb.Plugs.BasicAuth
   end
 
+  pipeline :authenticated do
+    plug InterfaceWeb.Plugs.Authenticate
+  end
+
   pipeline :guardian do
     plug :fetch_session
     plug :fetch_flash
@@ -23,10 +27,6 @@ defmodule InterfaceWeb.Router do
     plug Guardian.Plug.LoadResource, allow_blank: true
   end
 
-  pipeline :authenticated do
-    plug InterfaceWeb.Plugs.Authenticate
-  end
-
   pipeline :api do
     plug :accepts, ["json"]
   end
@@ -34,12 +34,12 @@ defmodule InterfaceWeb.Router do
   scope "/api" do
     pipe_through [:api, :guardian, :authenticated]
     forward "/", Absinthe.Plug,
-      schema: Schemas.General
+      schema: Schemas.Authenticated
   end
 
   scope "/graphiql" do
     forward "/", Absinthe.Plug.GraphiQL,
-    schema: Schemas.General
+    schema: Schemas.Guest
   end
 
   scope "/auth" do
