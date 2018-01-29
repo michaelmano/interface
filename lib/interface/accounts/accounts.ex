@@ -42,10 +42,7 @@ defmodule Interface.Accounts do
   end
 
   defp build_query(user, %{id: id, slug: slug, name: name}) do
-    user 
-    |> where([u], u.name == ^name) 
-    |> where([u], u.id == ^id)
-    |> where([u], u.slug == ^slug)
+    user |> where(name: ^name, id: ^id, slug: ^slug)
   end
 
   defp build_query(user, %{id: id}) do
