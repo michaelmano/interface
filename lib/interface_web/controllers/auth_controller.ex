@@ -24,7 +24,7 @@ defmodule InterfaceWeb.AuthController do
     [username, password, device_info] = Auth.get_header_info(conn)
     case Accounts.authenticate(username, password) do
       {:ok, user} -> render(conn, "show.json", Token.new_device(user, device_info))
-      {:error, error} -> {:error, %{message: error, status: 418}}
+      {:error, error} -> {:error, error}
     end
   end
   
