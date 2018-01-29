@@ -17,4 +17,16 @@ defmodule InterfaceWeb.FallbackController do
     |> put_status(:not_found)
     |> render(InterfaceWeb.ErrorView, :"404")
   end
+
+  def call(conn, {:error, %{status: status}}) do
+    conn
+    |> put_status(status)
+    |> render(InterfaceWeb.ErrorView, :"#{status}")
+  end
+
+  def call(conn, _) do
+    conn
+    |> put_status(500)
+    |> render(InterfaceWeb.ErrorView, :"500")
+  end
 end
