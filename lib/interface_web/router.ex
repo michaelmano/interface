@@ -22,7 +22,7 @@ defmodule InterfaceWeb.Router do
     plug :fetch_session
     plug :fetch_flash
     plug Guardian.Plug.Pipeline, module: InterfaceWeb.Auth.Token,
-      error_handler: Auth.ErrorHandler
+      error_handler: InterfaceWeb.ErrorController
     plug Guardian.Plug.VerifyHeader, realm: "Bearer"
     plug Guardian.Plug.LoadResource, allow_blank: true
   end
@@ -44,11 +44,11 @@ defmodule InterfaceWeb.Router do
 
   scope "/auth" do
     pipe_through [:api, :basic_auth, :guardian]
-    post "/register", AuthController, :create
-    post "/login", AuthController, :store
+    post "/register", RegisterController, :create
+    post "/login", LoginController, :store
 
     pipe_through :authenticated
-    post "/logout", AuthController, :destroy
-    post "/refresh", AuthController, :update
+    post "/logout", LogoutController, :destroy
+    # Create token route for creating, refreshing, destroying.
   end
 end

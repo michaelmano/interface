@@ -1,4 +1,4 @@
-defmodule InterfaceWeb.AuthController do
+defmodule InterfaceWeb.LoginController do
   import Plug.Conn
   use InterfaceWeb, :controller
   alias Interface.Accounts
@@ -6,7 +6,7 @@ defmodule InterfaceWeb.AuthController do
   alias InterfaceWeb.Format
   alias InterfaceWeb.Auth.Token
 
-  action_fallback InterfaceWeb.FallbackController
+  action_fallback InterfaceWeb.ErrorController
 
   @doc false
   def init(opts), do: opts
@@ -19,12 +19,15 @@ defmodule InterfaceWeb.AuthController do
     conn
   end
 
-  # TODO: Create Library that will throttle login attempts and add captcha.
   def store(conn, _params) do
-    case Auth.get_header_info(conn) do
-      {:ok, values} -> render_authenticated_user(conn, values)
-      {:error, message} -> {:error, :im_a_teapot, message}
-    end
+    conn
+    |> Auth.login()
+    |> render("show.json")
+
+    # case Auth.login() do
+    #   {:ok, values} -> render_authenticated_user(conn, values)
+    #   {:error, message} -> {:error, :im_a_teapot, message}
+    # end
   end
   
   def show(conn, _params) do

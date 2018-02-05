@@ -3,11 +3,26 @@ defmodule InterfaceWeb.Plugs.BasicAuth do
   alias InterfaceWeb.Format
 
   def init(opts), do: opts
+
   def call(conn, _) do
-    ["authorization", "device-info"]
-    |> Enum.map(fn header -> validate_header(conn, header) end)
-    |> Enum.filter(&!is_nil(&1))
-    |> build_response(conn)
+    Enum.map(["authorization", "device-info"], fn header -> 
+      case validate_header(conn, header) do
+        {:error, value} -> value
+        _ -> nil
+      end
+    end)
+    |> Enum.reject(&is_nil/1)
+    |> case do
+      [] -> conn
+      errors -> 
+        conn
+        |> put_status(401)
+        |> Phoenix.Controller.render(
+          InterfaceWeb.ErrorView,
+          :"error", %{errors: errors}
+        )
+        |> halt()
+    end
   end
 
   defp validate_header(conn, header) do
@@ -15,15 +30,8 @@ defmodule InterfaceWeb.Plugs.BasicAuth do
     |> Plug.Conn.get_req_header(header)
     |> List.first
     |> case do
-      nil -> "The header #{header} was not set."
-      _ -> nil
-    end
-  end
-
-  defp build_response(errors, conn) do
-    case Enum.any?(errors) do
-      true -> Format.json_resp(conn, 400, %{errors: errors}) |> halt()
-      false -> conn
+      nil -> {:error, %{message: "The header #{header} was not set."}}
+      value -> nil
     end
   end
 end

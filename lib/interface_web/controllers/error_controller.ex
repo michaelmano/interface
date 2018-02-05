@@ -1,4 +1,4 @@
-defmodule InterfaceWeb.FallbackController do
+defmodule InterfaceWeb.ErrorController do
   @moduledoc """
   Translates controller action results into valid `Plug.Conn` responses.
 
@@ -13,15 +13,15 @@ defmodule InterfaceWeb.FallbackController do
     |> render(InterfaceWeb.ChangesetView, "error.json", changeset: changeset)
   end
 
-  def call(conn, {:error, status, message}) do
+  def call(conn, {:error, status, errors}) do
     conn
     |> put_status(status)
-    |> render(InterfaceWeb.ErrorView, :"error", %{message: message})
+    |> render(InterfaceWeb.ErrorView, :"error", %{errors: errors})
   end
 
   def call(conn, _) do
     conn
     |> put_status(500)
-    |> render(InterfaceWeb.ErrorView, :"error", %{message: "Shit son."})
+    |> render(InterfaceWeb.ErrorView, :"error", %{errors: %{message: "Shit son."}})
   end
 end
