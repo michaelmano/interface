@@ -44,11 +44,11 @@ defmodule InterfaceWeb.Router do
 
   scope "/auth" do
     pipe_through [:api, :basic_auth, :guardian]
-    post "/register", RegisterController, :create
-    post "/login", LoginController, :store
+    post "/register", InterfaceWeb.RegisterController, :create
+    post "/login", InterfaceWeb.LoginController, :store
 
     pipe_through :authenticated
-    post "/logout", LogoutController, :destroy
+    post "/logout", InterfaceWeb.LogoutController, :destroy
     # Create token route for creating, refreshing, destroying.
   end
 end
