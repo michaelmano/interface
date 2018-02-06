@@ -22,6 +22,6 @@ defmodule InterfaceWeb.ErrorController do
   def call(conn, _) do
     conn
     |> put_status(500)
-    |> render(InterfaceWeb.ErrorView, :"error", %{errors: %{message: "Shit son."}})
+    |> render(InterfaceWeb.ErrorView, :"error", %{errors: "Shit son."})
   end
 end

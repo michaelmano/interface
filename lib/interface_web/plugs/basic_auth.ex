@@ -1,37 +1,42 @@
 defmodule InterfaceWeb.Plugs.BasicAuth do
   import Plug.Conn
-  alias InterfaceWeb.Format
+  @headers ["authorization","device-info"]
 
   def init(opts), do: opts
 
   def call(conn, _) do
-    Enum.map(["authorization", "device-info"], fn header -> 
-      case validate_header(conn, header) do
-        {:error, value} -> value
-        _ -> nil
-      end
-    end)
-    |> Enum.reject(&is_nil/1)
-    |> case do
-      [] -> conn
-      errors -> 
+    case build_context(conn) do
+      {:ok, context} ->
+        put_private(conn, :login_details, %{context: context})
+      {:error, reason} ->
         conn
         |> put_status(401)
         |> Phoenix.Controller.render(
           InterfaceWeb.ErrorView,
-          :"error", %{errors: errors}
+          :"error", %{errors: reason}
         )
+        |> halt()
+      _ ->
+        conn
+        |> send_resp(400, "Bad Request")
         |> halt()
     end
   end
 
-  defp validate_header(conn, header) do
+  def build_context(conn) do
+    @headers
+    |> Enum.map(fn (header) -> get_header(conn, header) end)
+    |> case do
+      [nil,nil] -> {:error, Enum.map(@headers, &"#{&1} header was not set.")}
+      [nil,val] -> {:error, "#{List.first(@headers)} header was not set."}
+      [val,nil] -> {:error, "#{List.last(@headers)} header was not set."}
+      [auth,device] -> {:ok, %{auth: auth, device: device}}
+    end
+  end
+
+  defp get_header(conn, header) do
     conn
     |> Plug.Conn.get_req_header(header)
     |> List.first
-    |> case do
-      nil -> {:error, %{message: "The header #{header} was not set."}}
-      value -> nil
-    end
   end
 end
