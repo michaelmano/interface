@@ -1,5 +1,7 @@
 defmodule InterfaceWeb.Plugs.Authenticate do
   import Plug.Conn
+  use Phoenix.Controller, only: [render: 3]
+  alias InterfaceWeb.ErrorView
 
   def init(opts), do: opts
   def call(conn, _) do
@@ -8,11 +10,13 @@ defmodule InterfaceWeb.Plugs.Authenticate do
         put_private(conn, :absinthe, %{context: context})
       {:error, reason} ->
         conn
-        |> send_resp(403, reason)
+        |> put_status(403)
+        |> render(ErrorView,:"error", %{errors: reason})
         |> halt()
       _ ->
         conn
-        |> send_resp(400, "Bad Request")
+        |> put_status(400)
+        |> render(ErrorView,:"error", %{errors: "Bad Request"})
         |> halt()
     end
   end

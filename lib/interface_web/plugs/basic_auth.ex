@@ -1,5 +1,8 @@
 defmodule InterfaceWeb.Plugs.BasicAuth do
   import Plug.Conn
+  use Phoenix.Controller, only: [render: 3]
+  alias InterfaceWeb.ErrorView
+
   @headers ["authorization","device-info"]
 
   def init(opts), do: opts
@@ -11,14 +14,7 @@ defmodule InterfaceWeb.Plugs.BasicAuth do
       {:error, reason} ->
         conn
         |> put_status(401)
-        |> Phoenix.Controller.render(
-          InterfaceWeb.ErrorView,
-          :"error", %{errors: reason}
-        )
-        |> halt()
-      _ ->
-        conn
-        |> send_resp(400, "Bad Request")
+        |> render(ErrorView,:"error", %{errors: reason})
         |> halt()
     end
   end
