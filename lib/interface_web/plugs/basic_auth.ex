@@ -35,4 +35,8 @@ defmodule InterfaceWeb.Plugs.BasicAuth do
     |> Plug.Conn.get_req_header(header)
     |> List.first
   end
+
+  defp return_error(conn, reason) do
+    
+  end
 end
