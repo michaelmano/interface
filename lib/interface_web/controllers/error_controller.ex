@@ -33,8 +33,7 @@ defmodule InterfaceWeb.ErrorController do
   end
 
   def auth_error(conn, {type, reason}, _opts) do
-    error = 
-    case is_atom(reason) do
+    error = case is_atom(reason) do
       true -> reason
       _ -> type
     end
