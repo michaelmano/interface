@@ -63,6 +63,7 @@ defmodule Interface.Auth do
       _ -> {:error, "String is not valid Base64"}
     end
   end
+  
   def after_encode_and_sign(resource, claims, token, _options) do
     case Guardian.DB.after_encode_and_sign(resource, claims["typ"], claims, token) do
       {:ok, _} -> {:ok, token}
