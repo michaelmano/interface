@@ -21,7 +21,7 @@ config :interface, Interface.Auth,
 config :guardian, Guardian.DB,
   repo: Interface.Repo,
   schema_name: "guardian_tokens", # default
-  token_types: ["refresh_token"], # store all token types if not set
+  # token_types: ["refresh_token"], # store all token types if not set
   sweep_interval: 60 # default: 60 minutes
 
 # Configures the endpoint
