@@ -8,7 +8,7 @@ config :interface,
   ecto_repos: [Interface.Repo]
 
 # Configures Guardian
-config :interface, InterfaceWeb.Auth.Token,
+config :interface, Interface.Auth,
   issuer: "Interface",
   hooks: Guardian.DB,
   secret_key: System.get_env("GUARDIAN_SECRET"),

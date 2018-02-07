@@ -10,7 +10,7 @@ defmodule InterfaceWeb.Plugs.BasicAuth do
   def call(conn, _) do
     case build_context(conn) do
       {:ok, context} ->
-        put_private(conn, :login_details, %{context: context})
+        put_private(conn, :login_details, context)
       {:error, reason} ->
         conn
         |> put_status(401)
