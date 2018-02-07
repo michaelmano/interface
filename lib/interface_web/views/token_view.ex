@@ -12,4 +12,8 @@ defmodule InterfaceWeb.TokenView do
       error -> error
     end
   end
+
+  def render("refresh.json", %{token: token}) do
+    %{data: %{message: "meow"}}
+  end
 end

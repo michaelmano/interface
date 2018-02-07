@@ -6,7 +6,7 @@ defmodule InterfaceWeb.ErrorController do
   """
   use InterfaceWeb, :controller
   alias Plug.Conn.Status
-  alias InterfaceWeb.ErrorView
+  alias InterfaceWeb.{ErrorView, TokenView}
 
   def call(conn, {:error, %Ecto.Changeset{} = changeset}) do
     conn
@@ -33,11 +33,12 @@ defmodule InterfaceWeb.ErrorController do
   end
 
   def auth_error(conn, {type, reason}, _opts) do
-    error = case is_atom(reason) do
-      true -> reason
-      _ -> type
+    error = case reason do
+      "typ" -> "token_type"
+      _ -> to_string(type)
     end
-    |> to_string
-    call(conn, {:error, 401, %{errors: %{error: error}}})
+    conn
+    |> put_status(401)
+    |> render(ErrorView, :"error", %{errors: error})
   end
 end
