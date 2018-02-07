@@ -13,8 +13,8 @@ config :interface, Interface.Auth,
   hooks: Guardian.DB,
   secret_key: System.get_env("GUARDIAN_SECRET"),
   token_ttl: %{
-    "refresh" => {System.get_env("GUARDIAN_REFRESH_EXPIRY"), :hours},
-    "access" => {System.get_env("GUARDIAN_ACCESS_EXPIRY"), :hours},
+    "refresh" => {System.get_env("GUARDIAN_REFRESH_EXPIRY"), :minutes},
+    "access" => {System.get_env("GUARDIAN_ACCESS_EXPIRY"), :minutes},
   }
 
 # Configures GuardianDB

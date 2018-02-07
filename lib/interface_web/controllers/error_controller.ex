@@ -32,15 +32,10 @@ defmodule InterfaceWeb.ErrorController do
     |> render(ErrorView, :"error", %{errors: "Shit son."})
   end
 
-  def auth_error(conn,  {type, _reason}, _opts) do
+  def auth_error(conn,  {type, reason}, _opts) do
+    error = %{error: to_string(reason)}
     conn
     |> put_status(401)
-    |> render(
-        ErrorView,
-        :"error",
-        %{errors: %{
-            error: to_string(type),
-            message: "Your token was invalid, Are you sure it was an access token?"
-      }})
+    |> render(ErrorView, :"error", %{errors: error})
   end
 end
