@@ -32,7 +32,7 @@ defmodule InterfaceWeb.ErrorController do
     |> render(ErrorView, :"error", %{errors: "Shit son."})
   end
 
-  def auth_error(conn,  {type, reason}, _opts) do
+  def auth_error(conn, {_type, reason}, _opts) do
     error = %{error: to_string(reason)}
     conn
     |> put_status(401)
