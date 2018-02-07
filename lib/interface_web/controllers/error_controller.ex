@@ -6,6 +6,7 @@ defmodule InterfaceWeb.ErrorController do
   """
   use InterfaceWeb, :controller
   alias Plug.Conn.Status
+  alias InterfaceWeb.ErrorView
 
   def call(conn, {:error, %Ecto.Changeset{} = changeset}) do
     conn
@@ -16,18 +17,30 @@ defmodule InterfaceWeb.ErrorController do
   def call(conn, {:error, status, errors}) do
     conn
     |> put_status(status)
-    |> render(InterfaceWeb.ErrorView, :"error", %{errors: errors})
+    |> render(ErrorView, :"error", %{errors: errors})
   end
 
   def call(conn, {:error, errors}) do
     conn
     |> put_status(500)
-    |> render(InterfaceWeb.ErrorView, :"error", %{errors: errors})
+    |> render(ErrorView, :"error", %{errors: errors})
   end
 
   def call(conn, _) do
     conn
     |> put_status(500)
-    |> render(InterfaceWeb.ErrorView, :"error", %{errors: "Shit son."})
+    |> render(ErrorView, :"error", %{errors: "Shit son."})
+  end
+
+  def auth_error(conn,  {type, _reason}, _opts) do
+    conn
+    |> put_status(401)
+    |> render(
+        ErrorView,
+        :"error",
+        %{errors: %{
+            error: to_string(type),
+            message: "Your token was invalid, Are you sure it was an access token?"
+      }})
   end
 end
