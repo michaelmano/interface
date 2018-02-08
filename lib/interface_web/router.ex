@@ -1,6 +1,6 @@
 defmodule InterfaceWeb.Router do
   use InterfaceWeb, :router
-  alias InterfaceWeb.{Auth,Schemas,AuthController}
+  alias InterfaceWeb.{Schemas}
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -14,11 +14,15 @@ defmodule InterfaceWeb.Router do
     plug InterfaceWeb.Plugs.BasicAuth
   end
 
-  pipeline :authenticated do
-    plug InterfaceWeb.Plugs.Authenticate
+  pipeline :refresh_auth do
+    plug Guardian.Plug.Pipeline, module: Interface.Auth,
+      error_handler: InterfaceWeb.ErrorController
+    plug Guardian.Plug.VerifyHeader,
+      realm: "Bearer",
+      claims: %{typ: "refresh"}
   end
 
-  pipeline :guardian do
+  pipeline :access_auth do
     plug :fetch_session
     plug :fetch_flash
     plug Guardian.Plug.Pipeline, module: Interface.Auth,
@@ -26,7 +30,8 @@ defmodule InterfaceWeb.Router do
     plug Guardian.Plug.VerifyHeader, 
       realm: "Bearer",
       claims: %{typ: "access"}
-    plug Guardian.Plug.LoadResource, allow_blank: true
+    plug Guardian.Plug.LoadResource, allow_blank: false
+    plug InterfaceWeb.Plugs.Authenticate
   end
 
   pipeline :api do
@@ -34,23 +39,31 @@ defmodule InterfaceWeb.Router do
   end
 
   scope "/api" do
-    pipe_through [:api, :guardian, :authenticated]
+    pipe_through [:api, :access_auth]
     forward "/", Absinthe.Plug,
       schema: Schemas.Authenticated
   end
 
-  scope "/graphiql" do
-    forward "/", Absinthe.Plug.GraphiQL,
-    schema: Schemas.Guest
+  scope "/auth" do
+    pipe_through [:api, :basic_auth]
+    post "/register", InterfaceWeb.RegisterController, :create
+    post "/login", InterfaceWeb.LoginController, :store
   end
 
   scope "/auth" do
-    pipe_through [:api, :basic_auth, :guardian]
-    post "/register", InterfaceWeb.RegisterController, :create
-    post "/login", InterfaceWeb.LoginController, :store
+      pipe_through [:api, :access_auth]
+      post "/logout", InterfaceWeb.LogoutController, :destroy
+  end
 
-    pipe_through :authenticated
-    post "/logout", InterfaceWeb.LogoutController, :destroy
-    # Create token route for creating, refreshing, destroying.
+  scope "/auth" do
+    pipe_through [:api, :basic_auth, :refresh_auth]
+    post "/refresh", InterfaceWeb.TokenController, :store
+  end
+
+  # Remove from production.
+  scope "/graphiql" do
+    pipe_through :api
+    forward "/", Absinthe.Plug.GraphiQL,
+    schema: Schemas.Guest
   end
 end

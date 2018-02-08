@@ -1,6 +1,5 @@
 defmodule InterfaceWeb.ErrorView do
   use InterfaceWeb, :view
-  alias Plug.Conn.Status
 
   def render(_, %{errors: errors}) do
     errors

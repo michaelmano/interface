@@ -1,7 +1,6 @@
 defmodule Interface.Auth do
   use Guardian, otp_app: :interface
   alias Comeonin.Bcrypt
-  alias InterfaceWeb.Format
   alias Interface.Accounts.User
   alias Interface.Repo
 
@@ -16,7 +15,8 @@ defmodule Interface.Auth do
 
   def login(%{auth: auth, device: device}) do
     auth
-    |> decode_auth_header("Basic ")
+    |> String.replace_prefix("Basic ", "")
+    |> decode_auth_header()
     |> case do
       {:ok, details} -> authenticate_user(details)
       error -> error
@@ -48,13 +48,7 @@ defmodule Interface.Auth do
   end
 
   def get_current_user(conn) do
-    
-  end
-
-  def decode_auth_header(auth, prefix) do
-    auth
-    |> String.replace_prefix(prefix, "")
-    |> decode_auth_header()
+    conn
   end
 
   def decode_auth_header(auth) do
@@ -77,9 +71,9 @@ defmodule Interface.Auth do
     end
   end
 
-  def on_revoke(claims, token, _options) do
-    with {:ok, _} <- Guardian.DB.on_revoke(claims, token) do
-      {:ok, claims}
+  def on_refresh({old_token, old_claims}, {new_token, new_claims}, _options) do
+    with {:ok, _} <- Guardian.DB.on_refresh({old_token, old_claims}, {new_token, new_claims}) do
+      {:ok, {old_token, old_claims}, {new_token, new_claims}}
     end
   end
 
@@ -98,16 +92,43 @@ defmodule Interface.Auth do
 
   def add_new_device(user, device_info) do
     claims = %{user_id: user.id, device_info: device_info}
-    with {:ok, refresh, ref_claims} <- encode_and_sign(user, claims, token_type: "refresh"),
-        {:ok, access, acc_claims} <- encode_and_sign(user, claims, token_type: "access") do
-          {:ok,
-          %{
-            user: user,
-            tokens: [
-              %{ token: access, claims: acc_claims},
-              %{ token: refresh, claims: ref_claims},
-            ]
-          }}
+    with {:ok, rf_tk, rf_cl} <- encode_and_sign(user, claims, token_type: "refresh"),
+        {:ok, ac_tk, ac_cl} <- encode_and_sign(user, claims, token_type: "access") do
+          {:ok, %{user: user, tokens: format_and_return_tokens(rf_tk, rf_cl, ac_tk, ac_cl)}}
       end
+  end
+
+  def on_revoke(claims, token, _options) do
+    with {:ok, _} <- Guardian.DB.on_revoke(claims, token) do
+      {:ok, claims}
+    end
+  end
+
+  def format_and_return_tokens(rf_tk, rf_cl, ac_tk, ac_cl) do
+    [%{ token: ac_tk, claims: ac_cl}, 
+    %{ token: rf_tk, claims: rf_cl}]
+    |> Enum.map(fn (token) -> 
+      with {:ok, value} <- DateTime.from_unix(token.claims["exp"]) do
+        %{type: token.claims["typ"],
+        exp: DateTime.diff(value, DateTime.utc_now()),
+        token: token.token}
+      end
+    end)
+  end
+
+  def refresh_tokens(%{auth: auth, device: device}) do
+    auth
+    |> String.replace_prefix("Bearer ", "")
+    |> exchange("refresh", "access")
+    |> case do
+      {:ok, {rf_tk, rf_cl}, {ac_tk, ac_cl}} -> 
+        case device == rf_cl["device_info"] do
+          true -> with {:ok, _, {nw_rf_tk, nw_rf_cl}} <- refresh(rf_tk) do
+              {:ok, %{tokens: format_and_return_tokens(nw_rf_tk, nw_rf_cl, ac_tk, ac_cl)}}
+            end
+          false -> {:error, 401, "invalid_token"} # Wrong device info, most liekly the token was stolen.
+        end
+      error -> error
+    end
   end
 end

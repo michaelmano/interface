@@ -10,7 +10,7 @@ defmodule InterfaceWeb.Plugs.BasicAuth do
   def call(conn, _) do
     case build_context(conn) do
       {:ok, context} ->
-        put_private(conn, :login_details, context)
+        put_private(conn, :auth_and_device_headers, context)
       {:error, reason} ->
         conn
         |> put_status(401)
@@ -34,9 +34,5 @@ defmodule InterfaceWeb.Plugs.BasicAuth do
     conn
     |> Plug.Conn.get_req_header(header)
     |> List.first
-  end
-
-  defp return_error(conn, reason) do
-    
   end
 end

@@ -1,10 +1,7 @@
 defmodule InterfaceWeb.LoginController do
   import Plug.Conn
   use InterfaceWeb, :controller
-  alias Interface.Accounts
   alias Interface.Auth
-  alias InterfaceWeb.Format
-  alias InterfaceWeb.Auth.Token
 
   action_fallback InterfaceWeb.ErrorController
 
@@ -20,7 +17,7 @@ defmodule InterfaceWeb.LoginController do
   end
 
   def store(conn, _params) do
-    case Auth.login(conn.private[:login_details]) do
+    case Auth.login(conn.private[:auth_and_device_headers]) do
       {:ok, details} -> render(conn, "show.json", details)
       error -> error
     end
@@ -35,18 +32,10 @@ defmodule InterfaceWeb.LoginController do
   end
   
   def update(conn, _params) do
-    conn.private[:guardian_default_token] 
-    |> Auth.exchange("refresh", "access")
-    |> case do
-      {:ok, _, {token, _}} -> Format.json_resp(conn, 200, %{token: token})
-    end
+    conn
   end
   
   def destroy(conn, _params) do
-    conn.private[:guardian_default_token]
-    |> Auth.revoke()
-    |> case do
-      {:ok, _} -> Format.json_resp(conn, 200, "You have been logged out.")
-    end
+    conn
   end
 end
