@@ -94,7 +94,9 @@ defmodule Interface.Auth do
     claims = %{user_id: user.id, device_info: device_info}
     with {:ok, rf_tk, rf_cl} <- encode_and_sign(user, claims, token_type: "refresh"),
         {:ok, ac_tk, ac_cl} <- encode_and_sign(user, claims, token_type: "access") do
-          {:ok, %{user: user, tokens: format_and_return_tokens(rf_tk, rf_cl, ac_tk, ac_cl)}}
+          {:ok, %{user: user, tokens: 
+            [format_token(rf_tk, rf_cl), format_token(ac_tk, ac_cl)]
+          }}
       end
   end
 
@@ -104,16 +106,11 @@ defmodule Interface.Auth do
     end
   end
 
-  def format_and_return_tokens(rf_tk, rf_cl, ac_tk, ac_cl) do
-    [%{ token: ac_tk, claims: ac_cl}, 
-    %{ token: rf_tk, claims: rf_cl}]
-    |> Enum.map(fn (token) -> 
-      with {:ok, value} <- DateTime.from_unix(token.claims["exp"]) do
-        %{type: token.claims["typ"],
-        exp: DateTime.diff(value, DateTime.utc_now()),
-        token: token.token}
-      end
-    end)
+  def format_token(token, claims) do
+    case DateTime.from_unix(claims["exp"]) do
+      {:ok, exp} -> %{type: claims["typ"], exp: exp, token: token}
+      error -> error
+    end
   end
 
   def refresh_tokens(%{auth: auth, device: device}) do
@@ -124,7 +121,9 @@ defmodule Interface.Auth do
       {:ok, {rf_tk, rf_cl}, {ac_tk, ac_cl}} -> 
         case device == rf_cl["device_info"] do
           true -> with {:ok, _, {nw_rf_tk, nw_rf_cl}} <- refresh(rf_tk) do
-              {:ok, %{tokens: format_and_return_tokens(nw_rf_tk, nw_rf_cl, ac_tk, ac_cl)}}
+              {:ok, %{tokens: [
+                format_token(rf_tk, rf_cl), format_token(ac_tk, ac_cl)
+              ]}}
             end
           false -> {:error, 401, "invalid_token"} # Wrong device info, most liekly the token was stolen.
         end
