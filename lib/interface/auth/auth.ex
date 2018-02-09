@@ -94,8 +94,12 @@ defmodule Interface.Auth do
     claims = %{user_id: user.id, device_info: device_info}
     with {:ok, rf_tk, rf_cl} <- encode_and_sign(user, claims, token_type: "refresh"),
         {:ok, ac_tk, ac_cl} <- encode_and_sign(user, claims, token_type: "access") do
-          {:ok, %{user: user, tokens: 
-            [format_token(rf_tk, rf_cl), format_token(ac_tk, ac_cl)]
+          {:ok, %{
+            user: user,
+            tokens: [
+              %{token: rf_tk, claims: rf_cl},
+              %{token: ac_tk, claims: ac_cl},
+            ]
           }}
       end
   end
@@ -103,13 +107,6 @@ defmodule Interface.Auth do
   def on_revoke(claims, token, _options) do
     with {:ok, _} <- Guardian.DB.on_revoke(claims, token) do
       {:ok, claims}
-    end
-  end
-
-  def format_token(token, claims) do
-    case DateTime.from_unix(claims["exp"]) do
-      {:ok, exp} -> %{type: claims["typ"], exp: exp, token: token}
-      error -> error
     end
   end
 
@@ -122,7 +119,8 @@ defmodule Interface.Auth do
         case device == rf_cl["device_info"] do
           true -> with {:ok, _, {nw_rf_tk, nw_rf_cl}} <- refresh(rf_tk) do
               {:ok, %{tokens: [
-                format_token(rf_tk, rf_cl), format_token(ac_tk, ac_cl)
+                %{token: rf_tk, claims: rf_cl},
+                %{token: ac_tk, claims: ac_cl},
               ]}}
             end
           false -> {:error, 401, "invalid_token"} # Wrong device info, most liekly the token was stolen.
