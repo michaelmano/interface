@@ -1,7 +1,7 @@
 defmodule InterfaceWeb.RegisterController do
   import Plug.Conn
   use InterfaceWeb, :controller
-
+  alias Interface.Accounts
   action_fallback InterfaceWeb.ErrorController
 
   @doc false
@@ -12,7 +12,14 @@ defmodule InterfaceWeb.RegisterController do
   end
   
   def create(conn, _params) do
-    conn
+    case Accounts.create_user(conn.params) do
+      {:ok, user} -> 
+        case Auth.login(conn.private[:auth_and_device_headers]) do
+          {:ok, details} -> render(conn, "show.json", details)
+          error -> error
+        end
+      error -> error
+    end
   end
 
   def store(conn, _params) do

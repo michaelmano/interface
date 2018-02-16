@@ -45,14 +45,14 @@ defmodule InterfaceWeb.Router do
   end
 
   scope "/auth" do
-    pipe_through [:api, :basic_auth]
+    pipe_through :api
+    post "/logout", InterfaceWeb.LogoutController, :destroy
     post "/register", InterfaceWeb.RegisterController, :create
-    post "/login", InterfaceWeb.LoginController, :store
   end
 
   scope "/auth" do
-      pipe_through [:api, :access_auth]
-      post "/logout", InterfaceWeb.LogoutController, :destroy
+    pipe_through [:api, :basic_auth]
+    post "/login", InterfaceWeb.LoginController, :store
   end
 
   scope "/auth" do

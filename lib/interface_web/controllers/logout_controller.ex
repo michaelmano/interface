@@ -1,6 +1,7 @@
 defmodule InterfaceWeb.LogoutController do
   import Plug.Conn
   use InterfaceWeb, :controller
+  alias Interface.Auth;
 
   action_fallback InterfaceWeb.ErrorController
 
@@ -31,7 +32,10 @@ defmodule InterfaceWeb.LogoutController do
     conn
   end
   
-  def destroy(conn, _params) do
-    conn
+  def destroy(conn, tokens) do
+    with {:ok, _} <- Auth.revoke(tokens["refresh"]),
+      _ <- Auth.revoke(tokens["access"]) do
+        render(conn, "show.json", %{message: "You have sucsessfully been logged out."})
+    end
   end
 end

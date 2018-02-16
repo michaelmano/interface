@@ -13,6 +13,7 @@ defmodule InterfaceWeb.Schemas.Authenticated do
 
   object :user do
     field :id, non_null(:id)
+    field :avatar, non_null(:string)
     field :slug, non_null(:string)
     field :name, non_null(:string)
     field :email, non_null(:string)

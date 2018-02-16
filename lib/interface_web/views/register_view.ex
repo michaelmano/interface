@@ -1,4 +1,4 @@
-defmodule InterfaceWeb.LoginView do
+defmodule InterfaceWeb.RegisterView do
   use InterfaceWeb, :view
   alias InterfaceWeb.{UserView, TokenView}
 

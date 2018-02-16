@@ -7,6 +7,7 @@ defmodule Interface.Repo.Migrations.CreateUsers do
       add :email, :string
       add :hashed_password, :string
       add :slug, :string
+      add :avatar, :string, default: "http://lorempixel.com/200/200/people/"
       timestamps()
     end
 

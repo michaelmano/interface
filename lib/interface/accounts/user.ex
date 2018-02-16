@@ -15,6 +15,7 @@ defmodule Interface.Accounts.User do
     field :password, :string, virtual: true
     field :password_confirmation, :string, virtual: true
     field :slug, :string, unique: true
+    field :avatar, :string
 
     timestamps()
   end
@@ -53,6 +54,7 @@ defmodule Interface.Accounts.User do
       :password,
       :password_confirmation,
       :slug,
+      :avatar,
     ])
   end
 

@@ -27,6 +27,10 @@ defmodule Interface.Auth do
     end
   end
 
+  def logout(conn) do
+    conn
+  end
+
   def authenticate_user([email | [password|_]]),
     do: authenticate_user(email, password)
   def authenticate_user(email, password) do
@@ -96,11 +100,10 @@ defmodule Interface.Auth do
         {:ok, ac_tk, ac_cl} <- encode_and_sign(user, claims, token_type: "access") do
           {:ok, %{
             user: user,
-            tokens: [
-              %{token: rf_tk, claims: rf_cl},
-              %{token: ac_tk, claims: ac_cl},
-            ]
-          }}
+            tokens: %{
+              refresh: %{token: rf_tk, claims: rf_cl},
+              access: %{token: ac_tk, claims: ac_cl}
+            }}}
       end
   end
 
@@ -118,10 +121,10 @@ defmodule Interface.Auth do
       {:ok, {rf_tk, rf_cl}, {ac_tk, ac_cl}} -> 
         case device == rf_cl["device_info"] do
           true -> with {:ok, _, {nw_rf_tk, nw_rf_cl}} <- refresh(rf_tk) do
-              {:ok, %{tokens: [
-                %{token: rf_tk, claims: rf_cl},
-                %{token: ac_tk, claims: ac_cl},
-              ]}}
+              {:ok, %{tokens: %{
+                refresh: %{token: nw_rf_tk, claims: nw_rf_cl},
+                access: %{token: ac_tk, claims: ac_cl}
+              }}}
             end
           false -> {:error, 401, "invalid_token"} # Wrong device info, most liekly the token was stolen.
         end
